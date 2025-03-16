@@ -1,0 +1,1 @@
+function OnMessageSend(e){console.log("OnMessageSend",e),e.completed()}function OnAppointmentSend(e){console.log("OnMessageSend",e),e.completed()}
