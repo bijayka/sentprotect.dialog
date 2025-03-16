@@ -62,7 +62,7 @@
       <Resources>
         <bt:Urls>
           <!-- The JavaScript code is hosted on a secure and trusted web server. -->
-          <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://officeoutlookonsend.azurewebsites.net/index.html" ></bt:Url>
+          <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/" ></bt:Url>
         </bt:Urls>
       </Resources>
     </VersionOverrides>

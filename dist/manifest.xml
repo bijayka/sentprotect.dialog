@@ -54,7 +54,7 @@
             <!-- In this particular case the function validateRecipients will be called within the JavaScript code referenced in residUILessFunctionFileUrl. -->
             <FunctionFile resid="residUILessFunctionFileUrl" />
             <ExtensionPoint xsi:type="Events">
-              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="validateRecipients" />
+              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="itemSendHandler" />
             </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
@@ -62,7 +62,7 @@
       <Resources>
         <bt:Urls>
           <!-- The JavaScript code is hosted on a secure and trusted web server. -->
-          <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://officeoutlookonsend.azurewebsites.net/index.html" ></bt:Url>
+          <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/" ></bt:Url>
         </bt:Urls>
       </Resources>
     </VersionOverrides>
