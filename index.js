@@ -4,6 +4,7 @@
 */
 
 function onMessageSendHandler(event) {
+  console.log("onMessageSendHandler called", event);
   Office.context.mailbox.item.body.getAsync(
     "text",
     { asyncContext: event },
@@ -12,7 +13,9 @@ function onMessageSendHandler(event) {
 }
 
 function getBodyCallback(asyncResult){
+  
   const event = asyncResult.asyncContext;
+  console.log("getBodyCallback called", event);
   let body = "";
   if (asyncResult.status !== Office.AsyncResultStatus.Failed && asyncResult.value !== undefined) {
     body = asyncResult.value;
@@ -34,6 +37,7 @@ function getBodyCallback(asyncResult){
 }
 
 function hasMatches(body) {
+  console.log("hasMatches called", body);
   if (body == null || body == "") {
     return false;
   }
