@@ -29,13 +29,23 @@
     <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit" />
   </Rule>
 
-  <ExtensionPoint xsi:type="MessageRead">
-    <SourceLocation DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/"/>
-    <RequestedHeight>250</RequestedHeight>
-  </ExtensionPoint>
+  <VersionOverrides>
+    <VersionOverride xsi:type="VersionOverridesV1_0">
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <DesktopFormFactor>
+            <ExtensionPoint xsi:type="MessageRead">
+              <SourceLocation DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/"/>
+              <RequestedHeight>250</RequestedHeight>
+            </ExtensionPoint>
 
-  <ExtensionPoint xsi:type="Events">
-    <Event Type="ItemSend" FunctionName="OnMessageSend" />
-    <Event Type="AppointmentSend" FunctionName="OnAppointmentSend" />
-  </ExtensionPoint>
+            <ExtensionPoint xsi:type="Events">
+              <Event Type="ItemSend" FunctionName="OnMessageSend" />
+              <Event Type="AppointmentSend" FunctionName="OnAppointmentSend" />
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+    </VersionOverride>
+  </VersionOverrides>
 </OfficeApp>
