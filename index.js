@@ -26,7 +26,11 @@ Office.onReady((info) => {
     });
 
     if (externalRecipients.length > 0) {
-      Office.context.mailbox.item.attachments.getAsync({ asyncContext: { event, externalRecipients } }, getAttachmentsCallback);
+
+      Office.context.mailbox.item.getAttachmentsAsync(
+        { asyncContext: { event, externalRecipients } },
+        getAttachmentsCallback);
+
     } else {
       event.completed({ allowEvent: true });
     }
