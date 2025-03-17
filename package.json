@@ -1,7 +1,7 @@
 {
     "name": "office-addin-taskpane-js",
     "scripts": {
-      "validate": "office-addin-manifest validate manifest.xml"
+      "build": "office-addin-manifest validate manifest.xml"
     },
     "dependencies": {
       "core-js": "^3.36.0",
