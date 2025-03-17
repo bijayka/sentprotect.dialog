@@ -56,11 +56,11 @@ Office.onReady((info) => {
       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join(", ");
       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join(", ");
       const message = `
-        <p><strong>Warning:</strong> The following recipients are not from the "ey.com" or "ey.net" domains:</p>
-        <p>${externalEmails}</p>
-        <p>The following attachments are included:</p>
-        <p>${attachmentNames}</p>
-        <p>Do you want to proceed?</p>
+        Warning:</strong> The following recipients are not from the "ey.com" or "ey.net" domains:
+        ${externalEmails}
+        The following attachments are included:
+        ${attachmentNames}
+        Do you want to proceed?
       `;
       event.completed({ allowEvent: false, errorMessage: message });
     } else {
