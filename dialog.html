@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Email</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .checkbox-list {
+      list-style: none;
+      padding: 0;
+    }
+    .checkbox-list li {
+      margin-bottom: 5px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    button.send {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+    button.cancel {
+      background-color: #f44336;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Review Email</h1>
+
+    <div class="section">
+      <h2>External Recipients</h2>
+      <ul class="checkbox-list" id="externalEmails">
+        <!-- Example items -->
+        <!-- <li><input type="checkbox" id="email1" value="email1@example.com"><label for="email1">email1@example.com</label></li> -->
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Attachments</h2>
+      <ul class="checkbox-list" id="attachments">
+        <!-- Example items -->
+        <!-- <li><input type="checkbox" id="file1" value="file1.txt"><label for="file1">file1.txt</label></li> -->
+      </ul>
+    </div>
+
+    <div class="buttons">
+      <button class="send" id="sendButton">Send</button>
+      <button class="cancel" id="cancelButton">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    // Example data for testing
+    const externalEmails = ["external1@example.com", "external2@example.com"];
+    const attachments = ["file1.docx", "file2.pdf"];
+
+    // Populate the external emails list
+    const emailList = document.getElementById("externalEmails");
+    externalEmails.forEach((email, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<input type="checkbox" id="email${index}" value="${email}" checked>
+                      <label for="email${index}">${email}</label>`;
+      emailList.appendChild(li);
+    });
+
+    // Populate the attachments list
+    const attachmentList = document.getElementById("attachments");
+    attachments.forEach((file, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<input type="checkbox" id="file${index}" value="${file}" checked>
+                      <label for="file${index}">${file}</label>`;
+      attachmentList.appendChild(li);
+    });
+
+    // Button actions
+    document.getElementById("sendButton").addEventListener("click", () => {
+      alert("Email sent!");
+      // Add logic to handle sending the email
+    });
+
+    document.getElementById("cancelButton").addEventListener("click", () => {
+      alert("Email canceled!");
+      // Add logic to handle canceling the email
+    });
+  </script>
+</body>
+</html>
