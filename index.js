@@ -55,15 +55,18 @@ Office.onReady((info) => {
     if (nonImageAttachments.length > 0) {
       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join(", ");
       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join(", ");
-      const message = `
-        Warning:</strong> The following recipients are not from the "ey.com" or "ey.net" domains:
-        ${externalEmails}
-        The following attachments are included:
-        ${attachmentNames}
-        Do you want to proceed?
+      const message = `## External Recipients
+A list of external email addresses with checkboxes:
+- external1@example.com
+- external2@example.com
+
+## Attachments
+A list of file attachments with checkboxes:
+- file1.docx
+- file2.docx
       `;
-      //event.completed({ allowEvent: false, errorMessage: message });
-      event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
+      event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
+      //event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
       event.completed({ allowEvent: true });
     }
