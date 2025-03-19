@@ -62,7 +62,8 @@ Office.onReady((info) => {
         ${attachmentNames}
         Do you want to proceed?
       `;
-      event.completed({ allowEvent: false, errorMessage: message });
+      //event.completed({ allowEvent: false, errorMessage: message });
+      event.completed({ allowEvent: false, commandId: "msgComposeOpenPaneButton" });
     } else {
       event.completed({ allowEvent: true });
     }
