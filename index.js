@@ -63,7 +63,7 @@ Office.onReady((info) => {
         Do you want to proceed?
       `;
       //event.completed({ allowEvent: false, errorMessage: message });
-      event.completed({ allowEvent: false, commandId: "msgComposeOpenPaneButton" });
+      event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
       event.completed({ allowEvent: true });
     }
