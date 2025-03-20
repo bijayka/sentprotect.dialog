@@ -31,7 +31,8 @@ Office.onReady((info) => {
       const email = recipient.emailAddress.toLowerCase();
       return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
     });
-
+    console.log('externalRecipients');
+    console.log(externalRecipients);
     if (externalRecipients.length > 0) {
 
       Office.context.mailbox.item.getAttachmentsAsync(
