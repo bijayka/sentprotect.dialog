@@ -77,34 +77,26 @@
   </div>
 
   <script>
-    // Function to populate external emails and attachments dynamically
-    function populateEmailData(emailData) {
-      const { externalEmails, attachments } = emailData;
+    // Example data for testing
+    const externalEmails = ["external1@example.com", "external2@example.com"];
+    const attachments = ["file1.docx", "file2.pdf"];
 
-      // Populate the external emails list
-      const emailList = document.getElementById("externalEmails");
-      emailList.innerHTML = ""; // Clear existing items
-      externalEmails.forEach((email, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<input type="checkbox" id="email${index}" value="${email}" checked>
-                        <label for="email${index}">${email}</label>`;
-        emailList.appendChild(li);
-      });
+    // Populate the external emails list
+    const emailList = document.getElementById("externalEmails");
+    externalEmails.forEach((email, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<input type="checkbox" id="email${index}" value="${email}" checked>
+                      <label for="email${index}">${email}</label>`;
+      emailList.appendChild(li);
+    });
 
-      // Populate the attachments list
-      const attachmentList = document.getElementById("attachments");
-      attachmentList.innerHTML = ""; // Clear existing items
-      attachments.forEach((file, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<input type="checkbox" id="file${index}" value="${file}" checked>
-                        <label for="file${index}">${file}</label>`;
-        attachmentList.appendChild(li);
-      });
-    }
-
-    // Populate data on page load
-    document.addEventListener("DOMContentLoaded", () => {
-      populateEmailData(emailData);
+    // Populate the attachments list
+    const attachmentList = document.getElementById("attachments");
+    attachments.forEach((file, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<input type="checkbox" id="file${index}" value="${file}" checked>
+                      <label for="file${index}">${file}</label>`;
+      attachmentList.appendChild(li);
     });
 
     // Button actions
