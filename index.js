@@ -6,7 +6,7 @@ w_indexjs_globa_var = "Hello World!";
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
-  const externalRecipients = [];
+  externalRecipients = [];
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
