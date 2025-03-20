@@ -2,11 +2,13 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+w_indexjs_globa_var = "Hello World!";
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
 
   function onMessageSendHandler(event) {
+    console.warn(w_indexjs_globa_var);
     Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
   }
 
@@ -70,7 +72,8 @@ A list of external email addresses with checkboxes:
 A list of file attachments with checkboxes:
 - ${attachmentNames}
       `;
-      event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
+      //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
+      event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
       event.completed({ allowEvent: true });
     }
