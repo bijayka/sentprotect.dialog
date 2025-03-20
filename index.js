@@ -6,6 +6,7 @@ w_indexjs_globa_var = "Hello World!";
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
+  const externalRecipients = [];
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
@@ -24,7 +25,7 @@ Office.onReady((info) => {
     const recipients = asyncResult.value;
     console.log('recipients');
     console.log(recipients[0].emailAddress);
-    const externalRecipients = recipients.filter(recipient => {
+    externalRecipients = recipients.filter(recipient => {
       const email = recipient.emailAddress.toLowerCase();
       return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
     });
