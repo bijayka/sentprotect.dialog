@@ -30,8 +30,7 @@ Office.onReady((info) => {
     });
 
     if (externalRecipients.length > 0) {
-      console.log('externalRecipients');
-      console.log(externalRecipients);
+
       Office.context.mailbox.item.getAttachmentsAsync(
         { asyncContext: { event, externalRecipients } },
         getAttachmentsCallback);
