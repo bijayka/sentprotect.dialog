@@ -3,7 +3,13 @@
 * See LICENSE in the project root for license information.
 */
 w_indexjs_globa_var = "Hello World!";
-externalRecipients = [];
+let Student =
+{
+    name: "ABC",
+    age: 18,
+    dept: "CSE",
+    score: 90
+};
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
