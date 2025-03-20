@@ -53,22 +53,25 @@ Office.onReady((info) => {
     });
 
     if (nonImageAttachments.length > 0) {
-      const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join(", ");
-      const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join(", ");
+      const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
+      const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
       const message = `## External Recipients
 A list of external email addresses with checkboxes:
-- external1@example.com
-- external2@example.com
+- ${externalEmails}
 
 ## Attachments
 A list of file attachments with checkboxes:
-- file1.docx
-- file2.docx
+- ${attachmentNames}
       `;
       event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
     } else {
       event.completed({ allowEvent: true });
     }
+  }
+
+  function handleSendFailure(event, errorMessage) {
+    console.error(errorMessage);
+    event.completed({ allowEvent: false, errorMessage: errorMessage });
   }
 
   // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
