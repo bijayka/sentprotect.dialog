@@ -3,10 +3,12 @@
 * See LICENSE in the project root for license information.
 */
 w_indexjs_globa_var = "Hello World!";
+externalRecipients = [];
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
-  externalRecipients = [];
+ 
+
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
