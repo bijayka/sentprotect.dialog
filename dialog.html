@@ -88,7 +88,7 @@
     const emailList = document.getElementById("externalEmails");
     externalEmails.forEach((email, index) => {
       const li = document.createElement("li");
-      li.innerHTML = `<input type="checkbox" id="email${index}" value="${email}" onclick="CheckboxClick()>
+      li.innerHTML = `<input type="checkbox" id="email${index}" value="${email}" onclick="CheckboxClick()">
                       <label for="email${index}">${email}</label>`;
       emailList.appendChild(li);
     });
@@ -97,7 +97,7 @@
     const attachmentList = document.getElementById("attachments");
     attachments.forEach((file, index) => {
       const li = document.createElement("li");
-      li.innerHTML = `<input type="checkbox" id="file${index}" value="${file}" onclick="CheckboxClick()>
+      li.innerHTML = `<input type="checkbox" id="file${index}" value="${file}" onclick="CheckboxClick()">
                       <label for="file${index}">${file}</label>`;
       attachmentList.appendChild(li);
     });
@@ -114,14 +114,13 @@
       // Add logic to handle canceling the email
     });
     function CheckboxClick(){
-       consoel.log('CheckboxClick')
-      //  if (document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length) {
-      //     console.log('All checkboxes are checked');
-      //     document.getElementById("btnSend").disabled = false;
-      //  } else {
-      //     console.log('Some checkboxes are not checked');
-      //     document.getElementById("btnSend").disabled = true;
-      //  }
+       if (document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length) {
+          console.log('All checkboxes are checked');
+          document.getElementById("btnSend").disabled = false;
+       } else {
+          console.log('Some checkboxes are not checked');
+          document.getElementById("btnSend").disabled = true;
+       }
     }
   </script>
 </body>
