@@ -3,7 +3,7 @@
 * See LICENSE in the project root for license information.
 */
 w_indexjs_globa_var = "Hello World!";
-export const url = "https://www.google.com";
+var myvar="Hello World!";
 let Student =
 {
     name: "ABC",
