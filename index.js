@@ -23,14 +23,15 @@ Office.onReady((info) => {
 
     const recipients = asyncResult.value;
     console.log('recipients');
-    console.log(recipients);
+    console.log(recipients[0].emailAddress);
     const externalRecipients = recipients.filter(recipient => {
       const email = recipient.emailAddress.toLowerCase();
       return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
     });
 
     if (externalRecipients.length > 0) {
-
+      console.log('externalRecipients');
+      console.log(externalRecipients);
       Office.context.mailbox.item.getAttachmentsAsync(
         { asyncContext: { event, externalRecipients } },
         getAttachmentsCallback);
