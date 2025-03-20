@@ -39,14 +39,21 @@ Office.onReady((info) => {
   function getAttachmentsCallback(asyncResult) {
     const { event, externalRecipients } = asyncResult.asyncContext;
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to get attachments";
+      const message = "Failed to retrieve attachments. Please try again or contact support.";
       console.error(message);
       event.completed({ allowEvent: false, errorMessage: message });
       return;
     }
 
     const attachments = asyncResult.value;
+
+    if (!attachments || attachments.length === 0) {
+      event.completed({ allowEvent: true });
+      return;
+    }
+
     const nonImageAttachments = attachments.filter(attachment => {
+      if (!attachment.name) return false; // Skip attachments without a name
       const extension = attachment.name.split('.').pop().toLowerCase();
       const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
       return !imageExtensions.includes(extension);
