@@ -3,6 +3,7 @@
 * See LICENSE in the project root for license information.
 */
 w_indexjs_globa_var = "Hello World!";
+export const url = "https://www.google.com";
 let Student =
 {
     name: "ABC",
@@ -31,8 +32,6 @@ Office.onReady((info) => {
     }
 
     const recipients = asyncResult.value;
-    console.log('recipients');
-    console.log(recipients[0].emailAddress);
     externalRecipients = recipients.filter(recipient => {
       const email = recipient.emailAddress.toLowerCase();
       return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");

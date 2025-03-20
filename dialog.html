@@ -82,13 +82,14 @@
   </div>
 
   <script>
+    import { url } from './index.js';
     // Example data for testing
     const externalEmails = ["external1@example.com", "external2@example.com"];
     const attachments = ["file1.docx", "file2.pdf"];
 
     let name = Student.name;
-    console.log('name');
-    console.log(name);
+    console.log('url');
+    console.log(url);
 
     // Populate the external emails list
     const emailList = document.getElementById("externalEmails");
