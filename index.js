@@ -2,6 +2,7 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+w_indexjs_globa_var = "Hello World!";
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
