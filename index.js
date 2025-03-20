@@ -22,6 +22,8 @@ Office.onReady((info) => {
     }
 
     const recipients = asyncResult.value;
+    console.log('recipients');
+    console.log(recipients);
     const externalRecipients = recipients.filter(recipient => {
       const email = recipient.emailAddress.toLowerCase();
       return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
