@@ -66,7 +66,6 @@ A list of file attachments with checkboxes:
 - file2.docx
       `;
       event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
-      //event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
       event.completed({ allowEvent: true });
     }
