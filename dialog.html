@@ -132,11 +132,42 @@
 
       // Button actions
       document.getElementById("btnSend").addEventListener("click", () => {
-        Office.context.mailbox.item.to.getAsync((result) => {
-          if (result.status === Office.AsyncResultStatus.Succeeded) {
-            alert("Email sent to external recipients!");
-            Office.context.ui.closeContainer();
-          }
+        // Fetch recipients from To, Cc, and Bcc fields
+        Promise.all([
+          fetchRecipients("to"),
+          fetchRecipients("cc"),
+          fetchRecipients("bcc")
+        ]).then(([toRecipients, ccRecipients, bccRecipients]) => {
+          const allRecipients = [...toRecipients, ...ccRecipients, ...bccRecipients];
+
+          // Set recipients back to the email
+          Office.context.mailbox.item.to.setAsync(toRecipients, (toResult) => {
+            if (toResult.status === Office.AsyncResultStatus.Succeeded) {
+              Office.context.mailbox.item.cc.setAsync(ccRecipients, (ccResult) => {
+                if (ccResult.status === Office.AsyncResultStatus.Succeeded) {
+                  Office.context.mailbox.item.bcc.setAsync(bccRecipients, (bccResult) => {
+                    if (bccResult.status === Office.AsyncResultStatus.Succeeded) {
+                      // Send the email
+                      Office.context.mailbox.item.saveAsync((saveResult) => {
+                        if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
+                          alert("Email sent to external recipients!");
+                          Office.context.ui.closeContainer();
+                        } else {
+                          alert("Failed to send email. Please try again.");
+                        }
+                      });
+                    } else {
+                      alert("Failed to set Bcc recipients. Please try again.");
+                    }
+                  });
+                } else {
+                  alert("Failed to set Cc recipients. Please try again.");
+                }
+              });
+            } else {
+              alert("Failed to set To recipients. Please try again.");
+            }
+          });
         });
       });
 
