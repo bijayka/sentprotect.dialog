@@ -53,7 +53,7 @@
 </head>
 <body>
   <div class="container">
-    <h4>Please confirm by ticking each box that you want to send the listed Attachment to External.</h4>
+    <h4>Please confirm by ticking each box that you want to send the listed email to external recipients.</h4>
     <div class="section">
       <h2>External Recipients</h2>
       <ul class="checkbox-list" id="externalEmails"></ul>
@@ -74,21 +74,35 @@
       const emailList = document.getElementById("externalEmails");
       const attachmentList = document.getElementById("attachments");
 
-      // Fetch external recipients
-      Office.context.mailbox.item.to.getAsync((result) => {
-        if (result.status === Office.AsyncResultStatus.Succeeded) {
-          const recipients = result.value.filter(recipient => {
-            const email = recipient.emailAddress.toLowerCase();
-            return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+      // Fetch recipients from To, Cc, and Bcc fields
+      const fetchRecipients = (field) => {
+        return new Promise((resolve) => {
+          Office.context.mailbox.item[field].getAsync((result) => {
+            if (result.status === Office.AsyncResultStatus.Succeeded) {
+              resolve(result.value.filter(recipient => {
+                const email = recipient.emailAddress.toLowerCase();
+                return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+              }));
+            } else {
+              resolve([]);
+            }
           });
+        });
+      };
 
-          recipients.forEach((recipient, index) => {
-            const li = document.createElement("li");
-            li.innerHTML = `<input type="checkbox" id="email${index}" value="${recipient.emailAddress}" onclick="CheckboxClick()">
-                            <label for="email${index}">${recipient.emailAddress}</label>`;
-            emailList.appendChild(li);
-          });
-        }
+      // Load external recipients
+      Promise.all([
+        fetchRecipients("to"),
+        fetchRecipients("cc"),
+        fetchRecipients("bcc")
+      ]).then(([toRecipients, ccRecipients, bccRecipients]) => {
+        const allRecipients = [...toRecipients, ...ccRecipients, ...bccRecipients];
+        allRecipients.forEach((recipient, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<input type="checkbox" id="email${index}" value="${recipient.emailAddress}" onclick="CheckboxClick()">
+                          <label for="email${index}">${recipient.emailAddress}</label>`;
+          emailList.appendChild(li);
+        });
       });
 
       // Fetch attachments
@@ -118,12 +132,15 @@
 
       // Button actions
       document.getElementById("btnSend").addEventListener("click", () => {
-        alert("Email sent!");
-        Office.context.ui.closeContainer();
+        Office.context.mailbox.item.to.getAsync((result) => {
+          if (result.status === Office.AsyncResultStatus.Succeeded) {
+            alert("Email sent to external recipients!");
+            Office.context.ui.closeContainer();
+          }
+        });
       });
 
       document.getElementById("cancelButton").addEventListener("click", () => {
-        alert("Email canceled!");
         Office.context.ui.closeContainer();
       });
     });
