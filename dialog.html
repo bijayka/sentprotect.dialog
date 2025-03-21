@@ -31,19 +31,12 @@
     }
     .buttons {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
     }
-    button {
+    button.cancel {
       padding: 10px 20px;
       font-size: 1em;
       cursor: pointer;
-    }
-    button.send {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-    }
-    button.cancel {
       background-color: #f44336;
       color: white;
       border: none;
@@ -65,7 +58,6 @@
     </div>
 
     <div class="buttons">
-      <button type="button" id="btnSend" class="btn btn-success" disabled="disabled">Send</button>
       <button class="cancel" id="cancelButton">Cancel</button>
     </div>
   </div>
@@ -124,55 +116,17 @@
         }
       });
 
-      // Enable "Send" button only when all checkboxes are checked
+      // Enable sending email when all checkboxes are checked
       window.CheckboxClick = function () {
         const allChecked = document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length;
-        document.getElementById("btnSend").disabled = !allChecked;
+        if (allChecked) {
+          Office.context.ui.messageParent("allowSend");
+        }
       };
 
-      // Button actions
-      document.getElementById("btnSend").addEventListener("click", () => {
-        // Fetch recipients from To, Cc, and Bcc fields
-        Promise.all([
-          fetchRecipients("to"),
-          fetchRecipients("cc"),
-          fetchRecipients("bcc")
-        ]).then(([toRecipients, ccRecipients, bccRecipients]) => {
-          const allRecipients = [...toRecipients, ...ccRecipients, ...bccRecipients];
-
-          // Set recipients back to the email
-          Office.context.mailbox.item.to.setAsync(toRecipients, (toResult) => {
-            if (toResult.status === Office.AsyncResultStatus.Succeeded) {
-              Office.context.mailbox.item.cc.setAsync(ccRecipients, (ccResult) => {
-                if (ccResult.status === Office.AsyncResultStatus.Succeeded) {
-                  Office.context.mailbox.item.bcc.setAsync(bccRecipients, (bccResult) => {
-                    if (bccResult.status === Office.AsyncResultStatus.Succeeded) {
-                      // Send the email
-                      Office.context.mailbox.item.saveAsync((saveResult) => {
-                        if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
-                          Office.context.ui.displayDialogAsync("Email sent successfully!", { height: 30, width: 20 });
-                          Office.context.ui.closeContainer();
-                        } else {
-                          Office.context.ui.displayDialogAsync("Failed to send email. Please try again.", { height: 30, width: 20 });
-                        }
-                      });
-                    } else {
-                      Office.context.ui.displayDialogAsync("Failed to set Bcc recipients. Please try again.", { height: 30, width: 20 });
-                    }
-                  });
-                } else {
-                  Office.context.ui.displayDialogAsync("Failed to set Cc recipients. Please try again.", { height: 30, width: 20 });
-                }
-              });
-            } else {
-              Office.context.ui.displayDialogAsync("Failed to set To recipients. Please try again.", { height: 30, width: 20 });
-            }
-          });
-        });
-      });
-
+      // Cancel button action
       document.getElementById("cancelButton").addEventListener("click", () => {
-        Office.context.ui.closeContainer();
+        Office.context.ui.messageParent("cancelSend");
       });
     });
   </script>
