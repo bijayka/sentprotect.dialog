@@ -150,17 +150,7 @@
                       // Send the email
                       Office.context.mailbox.item.saveAsync((saveResult) => {
                         if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
-                          Office.context.ui.displayDialogAsync(
-                            "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
-                            { height: 30, width: 20 },
-                            (asyncResult) => {
-                              if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                                console.log("Dialog opened successfully.");
-                              } else {
-                                console.error("Failed to open dialog:", asyncResult.error.message);
-                              }
-                            }
-                          );
+                          Office.context.ui.displayDialogAsync("Email sent successfully!", { height: 30, width: 20 });
                           Office.context.ui.closeContainer();
                         } else {
                           Office.context.ui.displayDialogAsync("Failed to send email. Please try again.", { height: 30, width: 20 });

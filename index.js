@@ -10,26 +10,26 @@ Office.onReady((info) => {
  
 
 
-  // function onMessageSendHandler(event) {
-  //   // console.warn(w_indexjs_globa_var);
-  //   Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
-  // }
-
-
   function onMessageSendHandler(event) {
-    Office.context.ui.displayDialogAsync(
-      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
-      { height: 30, width: 20 },
-      (asyncResult) => {
-        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-          console.log("Dialog opened successfully.");
-        } else {
-          console.error("Failed to open dialog:", asyncResult.error.message);
-          event.completed({ allowEvent: false });
-        }
-      }
-    );
+    // console.warn(w_indexjs_globa_var);
+    Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
   }
+
+
+  // function onMessageSendHandler(event) {
+  //   Office.context.ui.displayDialogAsync(
+  //     "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
+  //     { height: 30, width: 20 },
+  //     (asyncResult) => {
+  //       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+  //         console.log("Dialog opened successfully.");
+  //       } else {
+  //         console.error("Failed to open dialog:", asyncResult.error.message);
+  //         event.completed({ allowEvent: false });
+  //       }
+  //     }
+  //   );
+  // }
 
   function getRecipientsCallback(asyncResult) {
     const event = asyncResult.asyncContext;
