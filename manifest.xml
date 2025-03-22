@@ -44,6 +44,7 @@
     <Hosts>
       <Host xsi:type="MailHost">
         <!-- Event-based activation happens in a lightweight runtime.-->
+        <!-- test -->
         <Runtimes>
           <!-- HTML file including reference to or inline JavaScript event handlers.
                This is used by Outlook on the web and on the new Mac UI, and new Outlook on Windows. -->
