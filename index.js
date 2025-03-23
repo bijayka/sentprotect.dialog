@@ -11,7 +11,7 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
       item = Office.context.mailbox.item;
       getAllRecipients();
-      myAttachments();
+      sampleFunction();
       console.log('extRecipients');
       console.log(extRecipients); 
   }
@@ -112,6 +112,28 @@ function addAddresses (recipients) {
     }
 }
   
+
+  function sampleFunction() {
+    console.log('sampleFunction');
+    Office.context.mailbox.item.getAttachmentsAsync(function(asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        const attachments = asyncResult.value;
+        if (attachments.length > 0) {
+          for (let i = 0; i < attachments.length; i++) {
+            console.log(`${i+1}. Name: ${attachments[i].name}`);
+            console.log(`ID: ${attachments[i].id}`);
+            console.log(`Type: ${attachments[i].attachmentType}`);
+            console.log(`Inline content: ${attachments[i].isInline}`);
+            console.log(`Size: ${attachments[i].size}`);
+          }
+        } else {
+          console.log("This mail item doesn't contain any attachments.");
+        }
+      } else {
+        console.error(asyncResult.error);
+      }
+    });
+  }
 
   function getBcc() {
     Office.context.mailbox.item.bcc.getAsync(function(asyncResult) {
