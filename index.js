@@ -11,6 +11,7 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
       item = Office.context.mailbox.item;
       getAllRecipients();
+      getBcc();
       console.log('extRecipients');
       console.log(extRecipients); 
   }
