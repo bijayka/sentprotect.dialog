@@ -34,6 +34,7 @@ function getAllRecipients() {
       bccRecipients = item.bcc;
       console.log('bccRecipients');
       console.log(bccRecipients);
+      console.log(item.bcc[0].emailAddress);
   }
 
   // Get the recipients from the To or Required field of the item being composed.
