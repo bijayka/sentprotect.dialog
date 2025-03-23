@@ -15,77 +15,6 @@ Office.onReady((info) => {
   }
 });
 
-// Gets the email addresses of all the recipients of the item being composed.
-function getAllRecipients() {
-  let toRecipients, ccRecipients, bccRecipients;
-
-
-  // Verify if the mail item is an appointment or message.
-  if (item.itemType === Office.MailboxEnums.ItemType.Appointment) {
-      toRecipients = item.requiredAttendees;
-      ccRecipients = item.optionalAttendees;
-      console.log('item.itemType');
-      console.log(item.itemType);
-  }
-  else {
-      toRecipients = item.to;
-      ccRecipients = item.cc;
-      bccRecipients = item.bcc;
-  }
-
-  // Get the recipients from the To or Required field of the item being composed.
-  toRecipients.getAsync((asyncResult) => {
-      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          console.log(asyncResult.error.message);
-          return;
-      }
-      addAddresses(asyncResult.value);
-  });
-
-  // Get the recipients from the Cc or Optional field of the item being composed.
-  ccRecipients.getAsync((asyncResult) => {
-      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          console.log(asyncResult.error.message);
-          return;
-      }
-      addAddresses(asyncResult.value);
-
-  });
-
-  // Get the recipients from the Bcc field of the message being composed, if applicable.
-  // if (bccRecipients.length > 0) {
-  //     bccRecipients.getAsync((asyncResult) => {
-  //     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-  //         write(asyncResult.error.message);
-  //         return;
-  //     }
-  //     addAddresses(asyncResult.value);
-
-  //     });
-  // } else {
-  //     console.log("Recipients in the Bcc field: None");
-  // }
-
-  item.bcc.getAsync(function(asyncResult) {
-    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      const msgBcc = asyncResult.value;
-      for (let i = 0; i < msgBcc.length; i++) {
-        console.log(msgBcc[i].displayName + " (" + msgBcc[i].emailAddress + ")");
-        extRecipients.push(msgBcc[i].emailAddress);
-      }
-    } else {
-      console.error(asyncResult.error);
-      return;
-    }
-  });
-}
-
-function addAddresses (recipients) {
-  for (let i = 0; i < recipients.length; i++) {
-    extRecipients.push(recipients[i].emailAddress);
-  }
-}
-
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
@@ -201,6 +130,10 @@ function addAddresses (recipients) {
         extAttachments.push(mAttachmnt.name); 
 
       });
+      console.log('extRecipients');
+      console.log(extRecipients);
+      console.log('extattachments');
+      console.log(extAttachments);
 //       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
 //       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
 //       const message = `## External Recipients
