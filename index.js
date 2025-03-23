@@ -12,7 +12,22 @@ Office.onReady((info) => {
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
+    getBcc();
     Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
+  }
+
+  function getBcc() {
+    Office.context.mailbox.item.bcc.getAsync(function(asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        const msgBcc = asyncResult.value;
+        console.log("Message being blind-copied to:");
+        for (let i = 0; i < msgBcc.length; i++) {
+          console.log(msgBcc[i].displayName + " (" + msgBcc[i].emailAddress + ")");
+        }
+      } else {
+        console.error(asyncResult.error);
+      }
+    });
   }
 
   function getRecipientsCallback(asyncResult) {
