@@ -20,17 +20,20 @@ Office.onReady((info) => {
 function getAllRecipients() {
   let toRecipients, ccRecipients, bccRecipients;
 
-  console.log('item.itemType');
-  console.log(item.itemType);
+
   // Verify if the mail item is an appointment or message.
   if (item.itemType === Office.MailboxEnums.ItemType.Appointment) {
       toRecipients = item.requiredAttendees;
       ccRecipients = item.optionalAttendees;
+      console.log('item.itemType');
+      console.log(item.itemType);
   }
   else {
       toRecipients = item.to;
       ccRecipients = item.cc;
       bccRecipients = item.bcc;
+      console.log('bccRecipients');
+      console.log(bccRecipients);
   }
 
   // Get the recipients from the To or Required field of the item being composed.
