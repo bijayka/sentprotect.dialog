@@ -11,7 +11,7 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
       item = Office.context.mailbox.item;
       getAllRecipients();
-      getBcc();
+      getAttachments();
       console.log('extRecipients');
       console.log(extRecipients); 
   }
@@ -33,8 +33,6 @@ function getAllRecipients() {
       toRecipients = item.to;
       ccRecipients = item.cc;
       bccRecipients = item.bcc;
-
-
   }
 
   // Get the recipients from the To or Required field of the item being composed.
@@ -79,6 +77,7 @@ function getAllRecipients() {
       }
     } else {
       console.error(asyncResult.error);
+      return;
     }
   });
 }
@@ -94,6 +93,21 @@ function addAddresses (recipients) {
     console.warn(w_indexjs_globa_var);
     //getBcc();
     //Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
+  }
+
+  function getAttachments(){
+    if (item.attachments.length > 0) {
+      for (let i = 0; i < item.attachments.length; i++) {
+          const attachment = item.attachments[i];
+          console.log(`${i+1}. Name: ${attachment.name}`);
+          console.log(`ID: ${attachment.id}`);
+          console.log(`Type: ${attachment.attachmentType}`);
+          console.log(`Inline content: ${attachment.isInline}`);
+          console.log(`Size: ${attachment.size}`);
+      }
+  } else {
+      console.log("This mail item doesn't contain any attachments.");
+  }
   }
 
   function getBcc() {
