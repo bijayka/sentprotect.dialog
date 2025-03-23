@@ -37,9 +37,7 @@ function getAllRecipients() {
           write(asyncResult.error.message);
           return;
       }
-
-      // Display the email addresses of the recipients or attendees.
-      write(`Recipients in the To or Required field: ${displayAddresses(asyncResult.value)}`);
+      addAddresses(asyncResult.value);
   });
 
   // Get the recipients from the Cc or Optional field of the item being composed.
@@ -48,9 +46,8 @@ function getAllRecipients() {
           write(asyncResult.error.message);
           return;
       }
+      addAddresses(asyncResult.value);
 
-      // Display the email addresses of the recipients or attendees.
-      write(`Recipients in the Cc or Optional field: ${displayAddresses(asyncResult.value)}`);
   });
 
   // Get the recipients from the Bcc field of the message being composed, if applicable.
@@ -60,9 +57,8 @@ function getAllRecipients() {
           write(asyncResult.error.message);
           return;
       }
+      addAddresses(asyncResult.value);
 
-      // Display the email addresses of the recipients.
-      write(`Recipients in the Bcc field: ${displayAddresses(asyncResult.value)}`);
       });
   } else {
       write("Recipients in the Bcc field: None");
