@@ -260,16 +260,16 @@ function addAddresses (recipients) {
         extAttachments.push(mAttachmnt.name); 
 
       });
-      const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
-      const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
-      const message = `## External Recipients
-A list of external email addresses with checkboxes:
-- ${externalEmails}
+//       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
+//       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
+//       const message = `## External Recipients
+// A list of external email addresses with checkboxes:
+// - ${externalEmails}
 
-## Attachments
-A list of file attachments with checkboxes:
-- ${attachmentNames}
-      `;
+// ## Attachments
+// A list of file attachments with checkboxes:
+// - ${attachmentNames}
+//       `;
       //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
       event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
