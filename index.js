@@ -255,6 +255,11 @@ function addAddresses (recipients) {
     });
 
     if (nonImageAttachments.length > 0) {
+      nonImageAttachments.forEach((mAttachmnt, index) => {
+        console.log(`Attachment ${index + 1}: ${mAttachmnt.name}`); 
+        extAttachments.push(mAttachmnt.name); 
+
+      });
       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
       const message = `## External Recipients
@@ -265,11 +270,6 @@ A list of external email addresses with checkboxes:
 A list of file attachments with checkboxes:
 - ${attachmentNames}
       `;
-      nonImageAttachments.forEach((mAttachmnt, index) => {
-        console.log(`Attachment ${index + 1}: ${mAttachmnt.name}`); 
-        extAttachments.push(mAttachmnt.name); 
-
-      });
       //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
       event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
