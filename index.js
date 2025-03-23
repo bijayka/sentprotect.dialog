@@ -96,8 +96,8 @@ function addAddresses (recipients) {
   }
 
   function getAttachments(){
-    if (item.attachments.length > 0) {
-      for (let i = 0; i < item.attachments.length; i++) {
+    if (item.getAttachments.length > 0) {
+      for (let i = 0; i < item.getAttachments.length; i++) {
           const attachment = item.attachments[i];
           console.log(`${i+1}. Name: ${attachment.name}`);
           console.log(`ID: ${attachment.id}`);
