@@ -5,7 +5,7 @@
 w_indexjs_globa_var = "Hello World!";
 var extRecipients = [];
 var extAttachments = [];
-let myVar;
+let myVar='';
 let item;
 
 // Confirms that the Office.js library is loaded.
