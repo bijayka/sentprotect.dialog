@@ -92,68 +92,11 @@ function addAddresses (recipients) {
     Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
   }
 
-  function myAttachments() {
-    const item2 = Office.context.mailbox.item2;
-
-    if (item2.attachments.length > 0) {
-        for (let i = 0; i < item2.attachments.length; i++) {
-            const attachment = item2.attachments[i];
-            console.log(`${i+1}. Name: ${attachment.name}`);
-            console.log(`ID: ${attachment.id}`);
-            console.log(`Type: ${attachment.attachmentType}`);
-            console.log(`Inline content: ${attachment.isInline}`);
-            console.log(`Size: ${attachment.size}`);
-        }
-    } else {
-        console.log("This mail item2 doesn't contain any attachments.");
-    }
-}
-  
-
-  function sampleFunction() {
-    console.log('sampleFunction');
-    Office.context.mailbox.item.getAttachmentsAsync(function(asyncResult) {
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-        const attachments = asyncResult.value;
-        if (attachments.length > 0) {
-          for (let i = 0; i < attachments.length; i++) {
-            console.log(`${i+1}. Name: ${attachments[i].name}`);
-            console.log(`ID: ${attachments[i].id}`);
-            console.log(`Type: ${attachments[i].attachmentType}`);
-            console.log(`Inline content: ${attachments[i].isInline}`);
-            console.log(`Size: ${attachments[i].size}`);
-          }
-        } else {
-          console.log("This mail item doesn't contain any attachments.");
-        }
-      } else {
-        console.error(asyncResult.error);
-      }
-    });
-  }
-
-  function getBcc() {
-    Office.context.mailbox.item.bcc.getAsync(function(asyncResult) {
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-        const msgBcc = asyncResult.value;
-        const externalBCC = msgBcc.filter(recipient => {
-          const email = recipient.emailAddress.toLowerCase();
-          return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
-        });
-        console.log("Message being blind-copied to:");
-        for (let i = 0; i < externalBCC.length; i++) {
-          console.log(externalBCC[i].displayName + " (" + externalBCC[i].emailAddress + ")");
-        }
-      } else {
-        console.error(asyncResult.error);
-        const event = asyncResult.asyncContext;
-        event.completed({ allowEvent: false, errorMessage: message });
-      }
-    });
-  }
-
+ 
   function getToRecipientsCallback(asyncResult) {
     const event = asyncResult.asyncContext;
+    event.completed({ allowEvent: false, errorMessage: "Error" });
+    return;
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
       const message = "Failed to get to recipients";
       console.error(message);
@@ -225,7 +168,7 @@ function addAddresses (recipients) {
       });
     } 
     if (extRecipients.length > 0) {
-      item.getAttachmentsAsync({ asyncContext: event }, getAttachmentsCallback2);
+      item.getAttachmentsAsync({ asyncContext: event }, getAttachmentsCallback);
     } else {
       event.completed({ allowEvent: true });
     }
