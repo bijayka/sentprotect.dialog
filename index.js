@@ -95,8 +95,6 @@ function addAddresses (recipients) {
  
   function getToRecipientsCallback(asyncResult) {
     const event = asyncResult.asyncContext;
-    event.completed({ allowEvent: false, errorMessage: "Error" });
-    return;
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
       const message = "Failed to get to recipients";
       console.error(message);
@@ -168,14 +166,14 @@ function addAddresses (recipients) {
       });
     } 
     if (extRecipients.length > 0) {
-      item.getAttachmentsAsync({ asyncContext: event }, getAttachmentsCallback);
+      item.getAttachmentsAsync({ asyncContext: event }, getAttachmentsCallback2);
     } else {
       event.completed({ allowEvent: true });
     }
   }
 
   function getAttachmentsCallback2(asyncResult) {
-    const { event } = asyncResult.asyncContext;
+    const event = asyncResult.asyncContext;
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
       const message = "Failed to retrieve attachments. Please try again or contact support.";
       console.error(message);
