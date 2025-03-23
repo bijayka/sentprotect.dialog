@@ -20,6 +20,8 @@ Office.onReady((info) => {
 function getAllRecipients() {
   let toRecipients, ccRecipients, bccRecipients;
 
+  console.log('item.itemType');
+  console.log(item.itemType);
   // Verify if the mail item is an appointment or message.
   if (item.itemType === Office.MailboxEnums.ItemType.Appointment) {
       toRecipients = item.requiredAttendees;
@@ -34,7 +36,7 @@ function getAllRecipients() {
   // Get the recipients from the To or Required field of the item being composed.
   toRecipients.getAsync((asyncResult) => {
       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          write(asyncResult.error.message);
+          console.log(asyncResult.error.message);
           return;
       }
       addAddresses(asyncResult.value);
@@ -43,7 +45,7 @@ function getAllRecipients() {
   // Get the recipients from the Cc or Optional field of the item being composed.
   ccRecipients.getAsync((asyncResult) => {
       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          write(asyncResult.error.message);
+          console.log(asyncResult.error.message);
           return;
       }
       addAddresses(asyncResult.value);
