@@ -4,28 +4,100 @@
 */
 w_indexjs_globa_var = "Hello World!";
 var extRecipients = [];
+let item;
+
+// Confirms that the Office.js library is loaded.
 Office.onReady((info) => {
-  // Your code that uses Office.js APIs goes here
-  console.log("Office.js is ready!");
- 
+  if (info.host === Office.HostType.Outlook) {
+      item = Office.context.mailbox.item;
+      getAllRecipients();
+      console.log('extRecipients');
+      console.log(extRecipients); 
+  }
+});
+
+// Gets the email addresses of all the recipients of the item being composed.
+function getAllRecipients() {
+  let toRecipients, ccRecipients, bccRecipients;
+
+  // Verify if the mail item is an appointment or message.
+  if (item.itemType === Office.MailboxEnums.ItemType.Appointment) {
+      toRecipients = item.requiredAttendees;
+      ccRecipients = item.optionalAttendees;
+  }
+  else {
+      toRecipients = item.to;
+      ccRecipients = item.cc;
+      bccRecipients = item.bcc;
+  }
+
+  // Get the recipients from the To or Required field of the item being composed.
+  toRecipients.getAsync((asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          write(asyncResult.error.message);
+          return;
+      }
+
+      // Display the email addresses of the recipients or attendees.
+      write(`Recipients in the To or Required field: ${displayAddresses(asyncResult.value)}`);
+  });
+
+  // Get the recipients from the Cc or Optional field of the item being composed.
+  ccRecipients.getAsync((asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          write(asyncResult.error.message);
+          return;
+      }
+
+      // Display the email addresses of the recipients or attendees.
+      write(`Recipients in the Cc or Optional field: ${displayAddresses(asyncResult.value)}`);
+  });
+
+  // Get the recipients from the Bcc field of the message being composed, if applicable.
+  if (bccRecipients.length > 0) {
+      bccRecipients.getAsync((asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          write(asyncResult.error.message);
+          return;
+      }
+
+      // Display the email addresses of the recipients.
+      write(`Recipients in the Bcc field: ${displayAddresses(asyncResult.value)}`);
+      });
+  } else {
+      write("Recipients in the Bcc field: None");
+  }
+}
+
+function addAddresses (recipients) {
+  for (let i = 0; i < recipients.length; i++) {
+    extRecipients.push(recipients[i].emailAddress);
+  }
+}
 
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
-    getBcc();
-    Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
+    //getBcc();
+    //Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
   }
 
   function getBcc() {
     Office.context.mailbox.item.bcc.getAsync(function(asyncResult) {
       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
         const msgBcc = asyncResult.value;
+        const externalBCC = msgBcc.filter(recipient => {
+          const email = recipient.emailAddress.toLowerCase();
+          return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+        });
         console.log("Message being blind-copied to:");
-        for (let i = 0; i < msgBcc.length; i++) {
-          console.log(msgBcc[i].displayName + " (" + msgBcc[i].emailAddress + ")");
+        for (let i = 0; i < externalBCC.length; i++) {
+          console.log(externalBCC[i].displayName + " (" + externalBCC[i].emailAddress + ")");
         }
       } else {
         console.error(asyncResult.error);
+        const event = asyncResult.asyncContext;
+        event.completed({ allowEvent: false, errorMessage: message });
       }
     });
   }
@@ -105,4 +177,4 @@ A list of file attachments with checkboxes:
 
   // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
   Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
-});
+
