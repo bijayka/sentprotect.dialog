@@ -61,7 +61,7 @@ function getAllRecipients() {
 
       });
   } else {
-      write("Recipients in the Bcc field: None");
+      console.log("Recipients in the Bcc field: None");
   }
 }
 
