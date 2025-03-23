@@ -57,18 +57,30 @@ function getAllRecipients() {
   });
 
   // Get the recipients from the Bcc field of the message being composed, if applicable.
-  if (bccRecipients.length > 0) {
-      bccRecipients.getAsync((asyncResult) => {
-      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          write(asyncResult.error.message);
-          return;
-      }
-      addAddresses(asyncResult.value);
+  // if (bccRecipients.length > 0) {
+  //     bccRecipients.getAsync((asyncResult) => {
+  //     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+  //         write(asyncResult.error.message);
+  //         return;
+  //     }
+  //     addAddresses(asyncResult.value);
 
-      });
-  } else {
-      console.log("Recipients in the Bcc field: None");
-  }
+  //     });
+  // } else {
+  //     console.log("Recipients in the Bcc field: None");
+  // }
+
+  item.bcc.getAsync(function(asyncResult) {
+    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+      const msgBcc = asyncResult.value;
+      for (let i = 0; i < msgBcc.length; i++) {
+        console.log(msgBcc[i].displayName + " (" + msgBcc[i].emailAddress + ")");
+        extRecipients.push(msgBcc[i].emailAddress);
+      }
+    } else {
+      console.error(asyncResult.error);
+    }
+  });
 }
 
 function addAddresses (recipients) {
