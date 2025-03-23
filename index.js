@@ -7,6 +7,7 @@ var externalRecipients = [];
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
+  console.log('test');
 
   function onMessageSendHandler(event) {
     Office.context.ui.displayDialogAsync(
