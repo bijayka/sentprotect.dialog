@@ -5,7 +5,6 @@
 w_indexjs_globa_var = "Hello World!";
 var extRecipients = [];
 var extAttachments = [];
-let myVar='';
 let item;
 
 // Confirms that the Office.js library is loaded.
@@ -132,12 +131,7 @@ Office.onReady((info) => {
         extAttachments.push(mAttachmnt.name); 
 
       });
-      console.log('extRecipients');
-      console.log(extRecipients);
-      console.log('extattachments');
-      console.log(extAttachments);
-      console.log('myVar');
-      console.log(myVar);
+
 //       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
 //       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
 //       const message = `## External Recipients
