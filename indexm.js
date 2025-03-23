@@ -2,24 +2,42 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
-w_indexjs_globa_var = "Hello World!";
-var myvar="Hello World!!";
-let Student =
-{
-    name: "ABC",
-    age: 18,
-    dept: "CSE",
-    score: 90
-};
+// w_indexjs_globa_var = "Hello World!";
+var externalRecipients = [];
 Office.onReady((info) => {
   // Your code that uses Office.js APIs goes here
   console.log("Office.js is ready!");
- 
-
+  console.log('test');
 
   function onMessageSendHandler(event) {
-    console.warn(w_indexjs_globa_var);
-    Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
+    Office.context.ui.displayDialogAsync(
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
+      { height: 30, width: 20 },
+      (asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+          const dialog = asyncResult.value;
+
+          // Handle messages from the dialog
+          dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
+            if (message.message === "allowSend") {
+              dialog.close();
+              event.completed({ allowEvent: true });
+            } else if (message.message === "cancelSend") {
+              dialog.close();
+              event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
+            }
+          });
+
+          // Handle dialog closed
+          dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+            event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
+          });
+        } else {
+          console.error("Failed to open dialog:", asyncResult.error.message);
+          event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
+        }
+      }
+    );
   }
 
   function getRecipientsCallback(asyncResult) {
@@ -88,11 +106,6 @@ A list of file attachments with checkboxes:
     } else {
       event.completed({ allowEvent: true });
     }
-  }
-
-  function handleSendFailure(event, errorMessage) {
-    console.error(errorMessage);
-    event.completed({ allowEvent: false, errorMessage: errorMessage });
   }
 
   // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
