@@ -11,7 +11,7 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
       item = Office.context.mailbox.item;
       getAllRecipients();
-      getAttachments();
+      myAttachments();
       console.log('extRecipients');
       console.log(extRecipients); 
   }
@@ -95,20 +95,23 @@ function addAddresses (recipients) {
     //Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getRecipientsCallback);
   }
 
-  function getAttachments(){
-    if (item.getAttachments.length > 0) {
-      for (let i = 0; i < item.getAttachments.length; i++) {
-          const attachment = item.attachments[i];
-          console.log(`${i+1}. Name: ${attachment.name}`);
-          console.log(`ID: ${attachment.id}`);
-          console.log(`Type: ${attachment.attachmentType}`);
-          console.log(`Inline content: ${attachment.isInline}`);
-          console.log(`Size: ${attachment.size}`);
-      }
-  } else {
-      console.log("This mail item doesn't contain any attachments.");
-  }
-  }
+  function myAttachments() {
+    const item2 = Office.context.mailbox.item2;
+
+    if (item2.attachments.length > 0) {
+        for (let i = 0; i < item2.attachments.length; i++) {
+            const attachment = item2.attachments[i];
+            console.log(`${i+1}. Name: ${attachment.name}`);
+            console.log(`ID: ${attachment.id}`);
+            console.log(`Type: ${attachment.attachmentType}`);
+            console.log(`Inline content: ${attachment.isInline}`);
+            console.log(`Size: ${attachment.size}`);
+        }
+    } else {
+        console.log("This mail item2 doesn't contain any attachments.");
+    }
+}
+  
 
   function getBcc() {
     Office.context.mailbox.item.bcc.getAsync(function(asyncResult) {
