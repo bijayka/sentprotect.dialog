@@ -10,38 +10,34 @@ Office.onReady((info) => {
   console.log('test');
 
   function onMessageSendHandler(event) {
-    // Office.context.ui.displayDialogAsync(
-    //   "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
-    //   { height: 30, width: 20 },
-    //   (asyncResult) => {
-    //     if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-    //       const dialog = asyncResult.value;
+    Office.context.ui.displayDialogAsync(
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
+      { height: 30, width: 20 },
+      (asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+          const dialog = asyncResult.value;
 
-    //       // Handle messages from the dialog
-    //       dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
-    //         if (message.message === "allowSend") {
-    //           dialog.close();
-    //           event.completed({ allowEvent: true });
-    //         } else if (message.message === "cancelSend") {
-    //           dialog.close();
-    //           event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
-    //         }
-    //       });
+          // Handle messages from the dialog
+          dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
+            if (message.message === "allowSend") {
+              dialog.close();
+              event.completed({ allowEvent: true });
+            } else if (message.message === "cancelSend") {
+              dialog.close();
+              event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
+            }
+          });
 
-    //       // Handle dialog closed
-    //       dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
-    //         event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
-    //       });
-    //     } else {
-    //       console.error("Failed to open dialog:", asyncResult.error.message);
-    //       event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
-    //     }
-    //   }
-    // );
-
-
-
-    Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
+          // Handle dialog closed
+          dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+            event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
+          });
+        } else {
+          console.error("Failed to open dialog:", asyncResult.error.message);
+          event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
+        }
+      }
+    );
   }
 
   function getRecipientsCallback(asyncResult) {
