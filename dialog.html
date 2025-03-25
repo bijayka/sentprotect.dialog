@@ -82,15 +82,17 @@
     </div>
   </div>
   <script>
-    console.log('extRecipients');
-    console.log(extRecipients);
-    console.log('extattachments');
-    console.log(extAttachments);
+
     // Example data for testing
-    const externalEmails = ["external1@example.com", "external2@example.com"];
-    const attachments = ["file1.docx", "file2.pdf"];
-
-
+    // const externalEmails = ["external1@example.com", "external2@example.com"];
+    // const attachments = ["file1.docx", "file2.pdf"];
+    let retRecipients = localStorage.getItem("strRecipients")
+    let externalEmails = JSON.parse(retRecipients);
+    let retAttachments = localStorage.getItem("strAttachments")
+    let attachments = JSON.parse(retAttachments);
+    console.log(externalEmails);
+    console.log(attachments); 
+    
     // Populate the external emails list
     const emailList = document.getElementById("externalEmails");
     externalEmails.forEach((email, index) => {
