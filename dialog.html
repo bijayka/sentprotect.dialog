@@ -122,19 +122,19 @@
       //   message: "Email sent!",
       //   persistent: false
       // });
-      Office.context.mailbox.item.to.getAsync(function(asyncResult) {
-        const event = asyncResult.asyncContext;
-        if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-          const message = "Failed to send email: " + JSON.stringify(asyncResult.error);
-          console.error(message);
-          event.completed({ allowEvent: false, errorMessage: message });
-          return;
-        }
-        else{
-          console.log("Email sent");
-          event.completed({ allowEvent: true });
-        }      
-      });
+      // Office.context.mailbox.item.to.getAsync(function(asyncResult) {
+      //   const event = asyncResult.asyncContext;
+      //   if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      //     const message = "Failed to send email: " + JSON.stringify(asyncResult.error);
+      //     console.error(message);
+      //     event.completed({ allowEvent: false, errorMessage: message });
+      //     return;
+      //   }
+      //   else{
+      //     console.log("Email sent");
+      //     event.completed({ allowEvent: true });
+      //   }      
+      // });
 
     });
 
