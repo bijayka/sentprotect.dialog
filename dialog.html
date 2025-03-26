@@ -116,12 +116,12 @@
       w_indexjs_globa_var = "Hello World Updates"
       alert("Email sent!");
       // Add logic to handle sending the email
-      Office.context.mailbox.item.notificationMessages.replaceAsync("email-sent", {
-        type: "informationalMessage",
-        icon: "icon-16",
-        message: "Email sent!",
-        persistent: false
-      });
+      // Office.context.mailbox.item.notificationMessages.replaceAsync("email-sent", {
+      //   type: "informationalMessage",
+      //   icon: "icon-16",
+      //   message: "Email sent!",
+      //   persistent: false
+      // });
     });
 
     document.getElementById("cancelButton").addEventListener("click", () => {
