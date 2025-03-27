@@ -9,32 +9,22 @@ Office.onReady((info) => {
   console.log("Office.js is ready!");
   console.log('test');
 
+
+  //Modifications
+  console.log("Opening dialog...");
+ 
+
   function onMessageSendHandler(event) {
-    Office.context.ui.displayDialogAsync(
-      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
-      { height: 30, width: 20 },
+    Office.context.ui.displayTaskPaneAsync(
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html", // URL of the task pane
+      { title: "Review Email" }, // Task pane title
       (asyncResult) => {
         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-          const dialog = asyncResult.value;
-
-          // Handle messages from the dialog
-          dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
-            if (message.message === "allowSend") {
-              dialog.close();
-              event.completed({ allowEvent: true });
-            } else if (message.message === "cancelSend") {
-              dialog.close();
-              event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
-            }
-          });
-
-          // Handle dialog closed
-          dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
-            event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
-          });
+          console.log("Task pane opened successfully.");
+          event.completed({ allowEvent: false, errorMessage: "Please review the email in the task pane before sending." });
         } else {
-          console.error("Failed to open dialog:", asyncResult.error.message);
-          event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
+          console.error("Failed to open task pane:", asyncResult.error.message);
+          event.completed({ allowEvent: false, errorMessage: "Failed to open the task pane." });
         }
       }
     );
@@ -111,3 +101,6 @@ A list of file attachments with checkboxes:
   // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
   Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
 });
+
+
+
