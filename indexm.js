@@ -26,15 +26,18 @@ Office.onReady((info) => {
           dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
             if (message.message === "allowSend") {
               dialog.close();
+              console.log("User allowed sending the email.");
               event.completed({ allowEvent: true });
             } else if (message.message === "cancelSend") {
               dialog.close();
+              console.log("User canceled sending the email.");
               event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
             }
           });
 
           // Handle dialog closed
           dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+            console.log("Dialog was closed.");
             event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
           });
         } else {
