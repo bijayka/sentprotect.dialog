@@ -120,7 +120,12 @@
       window.CheckboxClick = function () {
         const allChecked = document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length;
         if (allChecked) {
-          Office.context.ui.messageParent("allowSend");
+          if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+            Office.context.ui.messageParent("allowSend");
+          } else {
+            console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
+            alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
+          }
         }
       };
 
