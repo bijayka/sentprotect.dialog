@@ -115,6 +115,16 @@
     document.getElementById("btnSend").addEventListener("click", () => {
       w_indexjs_globa_var = "Hello World Updates"
       alert("Email sent!");
+          // Programmatically send the item.
+    Office.context.mailbox.item.sendAsync((sendResult) => {
+        if (sendResult.status === Office.AsyncResultStatus.Failed) {
+            console.log(`Unable to send the message: ${sendResult.error.message}`);
+            return;
+        }
+
+        // Don't run additional operations here. Process them before the sendAsync call instead.
+    });
+      console.log("Finally, Email sent!");
       // Add logic to handle sending the email
       // Office.context.mailbox.item.notificationMessages.replaceAsync("email-sent", {
       //   type: "informationalMessage",
