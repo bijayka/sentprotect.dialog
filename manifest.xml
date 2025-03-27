@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
    <Id>bc1f2d1b-af23-49ac-a6cb-bc04b4cc587a</Id>
-   <Version>1.0.0.18</Version>
+   <Version>1.0.0.19</Version>
    <ProviderName>EY</ProviderName>
    <DefaultLocale>en-US</DefaultLocale>
    <DisplayName DefaultValue="EY SendProtect Dialog"/>
@@ -100,6 +100,12 @@
             </LaunchEvents>
             <!-- Identify the runtime to be used (also referenced by the Runtime element). -->
             <SourceLocation resid="WebViewRuntime.Url"/>
+          </ExtensionPoint>
+          <ExtensionPoint xsi:type="LaunchEvent">
+            <LaunchEvents>
+              <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser" />
+            </LaunchEvents>
+            <SourceLocation resid="Taskpane.Url" />
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>

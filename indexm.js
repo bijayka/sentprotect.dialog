@@ -15,34 +15,16 @@ Office.onReady((info) => {
  
 
   function onMessageSendHandler(event) {
-    Office.context.ui.displayDialogAsync(
-      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html", // URL of the dialog box
-      { height: 50, width: 50 }, // Adjust dimensions as needed
+    Office.context.ui.displayTaskPaneAsync(
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html", // URL of the task pane
+      { title: "Review Email" }, // Task pane title
       (asyncResult) => {
         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-          const dialog = asyncResult.value;
-
-          // Handle messages from the dialog
-          dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
-            if (message.message === "allowSend") {
-              dialog.close();
-              console.log("User allowed sending the email.");
-              event.completed({ allowEvent: true });
-            } else if (message.message === "cancelSend") {
-              dialog.close();
-              console.log("User canceled sending the email.");
-              event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
-            }
-          });
-
-          // Handle dialog closed
-          dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
-            console.log("Dialog was closed.");
-            event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
-          });
+          console.log("Task pane opened successfully.");
+          event.completed({ allowEvent: false, errorMessage: "Please review the email in the task pane before sending." });
         } else {
-          console.error("Failed to open dialog:", asyncResult.error.message);
-          event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
+          console.error("Failed to open task pane:", asyncResult.error.message);
+          event.completed({ allowEvent: false, errorMessage: "Failed to open the task pane." });
         }
       }
     );
