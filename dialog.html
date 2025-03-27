@@ -115,16 +115,6 @@
     document.getElementById("btnSend").addEventListener("click", () => {
       w_indexjs_globa_var = "Hello World Updates"
       alert("Email sent!");
-          // Programmatically send the item.
-    Office.context.mailbox.item.sendAsync((sendResult) => {
-        if (sendResult.status === Office.AsyncResultStatus.Failed) {
-            console.log(`Unable to send the message: ${sendResult.error.message}`);
-            return;
-        }
-
-        // Don't run additional operations here. Process them before the sendAsync call instead.
-    });
-      console.log("Finally, Email sent!");
       // Add logic to handle sending the email
       // Office.context.mailbox.item.notificationMessages.replaceAsync("email-sent", {
       //   type: "informationalMessage",
@@ -132,34 +122,12 @@
       //   message: "Email sent!",
       //   persistent: false
       // });
-      // Office.context.mailbox.item.to.getAsync(function(asyncResult) {
-      //   const event = asyncResult.asyncContext;
-      //   if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      //     const message = "Failed to send email: " + JSON.stringify(asyncResult.error);
-      //     console.error(message);
-      //     event.completed({ allowEvent: false, errorMessage: message });
-      //     return;
-      //   }
-      //   else{
-      //     console.log("Email sent");
-      //     event.completed({ allowEvent: true });
-      //   }      
-      // });
-
     });
 
     document.getElementById("cancelButton").addEventListener("click", () => {
       alert("Email canceled!");
       // Add logic to handle canceling the email
-      // if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
-      //   Office.context.ui.messageParent("closeDialog");
-      // } else {
-      //   console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
-      //   alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
-      //   window.close(); // Fallback to close the dialog in unsupported environments
-      // }
     });
-
     function CheckboxClick(){
        if (document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length) {
           console.log('All checkboxes are checked');
@@ -169,14 +137,6 @@
           document.getElementById("btnSend").disabled = true;
        }
     }
-
-    // Disable the close button on the top right corner of the task pane
-    Office.onReady(() => {
-      if (Office.context.ui) {
-        Office.context.ui.disableCloseButton();
-      }
-    });
-
   </script>
 </body>
 </html>
