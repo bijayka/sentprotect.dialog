@@ -15,219 +15,230 @@ Office.onReady((info) => {
   }
 });
 
+function onMessageSendHandler(event) {
+  Office.context.ui.displayDialogAsync(
+    "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html", // URL of the dialog box
+    { height: 50, width: 50 }, // Adjust dimensions as needed
+    (asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        const dialog = asyncResult.value;
 
+        // Handle messages from the dialog
+        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
+          if (message.message === "allowSend") {
+            dialog.close();
+            event.completed({ allowEvent: true });
+          } else if (message.message === "cancelSend") {
+            dialog.close();
+            event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
+          }
+        });
 
-  function onMessageSendHandler(event) {
-    console.warn(w_indexjs_globa_var);
-    Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
+        // Handle dialog closed
+        dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+          event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
+        });
+      } else {
+        console.error("Failed to open dialog:", asyncResult.error.message);
+        event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
+      }
+    }
+  );
+}
+
+function getToRecipientsCallback(asyncResult) {
+  const event = asyncResult.asyncContext;
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    const message = "Failed to get to recipients";
+    console.error(message);
+    event.completed({ allowEvent: false, errorMessage: message });
+    return;
   }
 
- 
-  function getToRecipientsCallback(asyncResult) {
-    const event = asyncResult.asyncContext;
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to get to recipients";
-      console.error(message);
-      event.completed({ allowEvent: false, errorMessage: message });
-      return;
-    }
+  const recipients = asyncResult.value;
+  externalRecipients = recipients.filter(recipient => {
+    const email = recipient.emailAddress.toLowerCase();
+    return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  });
 
-    const recipients = asyncResult.value;
-    externalRecipients = recipients.filter(recipient => {
-      const email = recipient.emailAddress.toLowerCase();
-      return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  if (externalRecipients.length > 0) {
+    externalRecipients.forEach((recipient, index) => {
+      console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`); 
+      extRecipients.push(recipient.emailAddress); 
+
     });
+  } 
+  item.cc.getAsync({ asyncContext: event }, getCCRecipientsCallback);
+}
 
-    if (externalRecipients.length > 0) {
-      externalRecipients.forEach((recipient, index) => {
-        console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`); 
-        extRecipients.push(recipient.emailAddress); 
-
-      });
-    } 
-    item.cc.getAsync({ asyncContext: event }, getCCRecipientsCallback);
+function getCCRecipientsCallback(asyncResult) {
+  const event = asyncResult.asyncContext;
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    const message = "Failed to get CC recipients";
+    console.error(message);
+    event.completed({ allowEvent: false, errorMessage: message });
+    return;
   }
 
-  function getCCRecipientsCallback(asyncResult) {
-    const event = asyncResult.asyncContext;
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to get CC recipients";
-      console.error(message);
-      event.completed({ allowEvent: false, errorMessage: message });
-      return;
-    }
+  const recipients = asyncResult.value;
+  externalRecipients = recipients.filter(recipient => {
+    const email = recipient.emailAddress.toLowerCase();
+    return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  });
 
-    const recipients = asyncResult.value;
-    externalRecipients = recipients.filter(recipient => {
-      const email = recipient.emailAddress.toLowerCase();
-      return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  if (externalRecipients.length > 0) {
+    externalRecipients.forEach((recipient, index) => {
+      console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`); 
+      extRecipients.push(recipient.emailAddress); 
+
     });
+  } 
+  item.bcc.getAsync({ asyncContext: event }, getBccRecipientsCallback);
+}
 
-    if (externalRecipients.length > 0) {
-      externalRecipients.forEach((recipient, index) => {
-        console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`); 
-        extRecipients.push(recipient.emailAddress); 
-
-      });
-    } 
-    item.bcc.getAsync({ asyncContext: event }, getBccRecipientsCallback);
+function getBccRecipientsCallback(asyncResult) {
+  const event = asyncResult.asyncContext;
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    const message = "Failed to get BCC recipients";
+    console.error(message);
+    event.completed({ allowEvent: false, errorMessage: message });
+    return;
   }
 
-  function getBccRecipientsCallback(asyncResult) {
-    const event = asyncResult.asyncContext;
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to get BCC recipients";
-      console.error(message);
-      event.completed({ allowEvent: false, errorMessage: message });
-      return;
-    }
+  const recipients = asyncResult.value;
+  externalRecipients = recipients.filter(recipient => {
+    const email = recipient.emailAddress.toLowerCase();
+    return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  });
 
-    const recipients = asyncResult.value;
-    externalRecipients = recipients.filter(recipient => {
-      const email = recipient.emailAddress.toLowerCase();
-      return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  if (externalRecipients.length > 0) {
+    externalRecipients.forEach((recipient, index) => {
+      console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`); 
+      extRecipients.push(recipient.emailAddress); 
+
     });
+  } 
+  if (extRecipients.length > 0) {
+    item.getAttachmentsAsync({ asyncContext: event }, getAttachmentsCallback2);
+  } else {
+    event.completed({ allowEvent: true });
+  }
+}
 
-    if (externalRecipients.length > 0) {
-      externalRecipients.forEach((recipient, index) => {
-        console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`); 
-        extRecipients.push(recipient.emailAddress); 
-
-      });
-    } 
-    if (extRecipients.length > 0) {
-      item.getAttachmentsAsync({ asyncContext: event }, getAttachmentsCallback2);
-    } else {
-      event.completed({ allowEvent: true });
-    }
+function getAttachmentsCallback2(asyncResult) {
+  const event = asyncResult.asyncContext;
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    const message = "Failed to retrieve attachments. Please try again or contact support.";
+    console.error(message);
+    event.completed({ allowEvent: false, errorMessage: message });
+    return;
   }
 
-  function getAttachmentsCallback2(asyncResult) {
-    const event = asyncResult.asyncContext;
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to retrieve attachments. Please try again or contact support.";
-      console.error(message);
-      event.completed({ allowEvent: false, errorMessage: message });
-      return;
-    }
+  const attachments = asyncResult.value;
 
-    const attachments = asyncResult.value;
-
-    if (!attachments || attachments.length === 0) {
-      event.completed({ allowEvent: true });
-      return;
-    }
-
-    const nonImageAttachments = attachments.filter(attachment => {
-      if (!attachment.name) return false; // Skip attachments without a name
-      const extension = attachment.name.split('.').pop().toLowerCase();
-      const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
-      return !imageExtensions.includes(extension);
-    });
-
-    if (nonImageAttachments.length > 0) {
-      nonImageAttachments.forEach((mAttachmnt, index) => {
-        console.log(`Attachment ${index + 1}: ${mAttachmnt.name}`); 
-        extAttachments.push(mAttachmnt.name); 
-
-      });
-
-      let strRecipients = JSON.stringify(extRecipients);
-      localStorage.setItem("strRecipients", strRecipients);
-      let strAttachments = JSON.stringify(extAttachments);
-      localStorage.setItem("strAttachments", strAttachments);
-
-//       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
-//       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
-//       const message = `## External Recipients
-// A list of external email addresses with checkboxes:
-// - ${externalEmails}
-
-// ## Attachments
-// A list of file attachments with checkboxes:
-// - ${attachmentNames}
-//       `;
-      //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
-      event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
-    } else {
-      event.completed({ allowEvent: true });
-    }
+  if (!attachments || attachments.length === 0) {
+    event.completed({ allowEvent: true });
+    return;
   }
 
+  const nonImageAttachments = attachments.filter(attachment => {
+    if (!attachment.name) return false; // Skip attachments without a name
+    const extension = attachment.name.split('.').pop().toLowerCase();
+    const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
+    return !imageExtensions.includes(extension);
+  });
 
-  function getRecipientsCallback(asyncResult) {
-    const event = asyncResult.asyncContext;
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to get recipients";
-      console.error(message);
-      event.completed({ allowEvent: false, errorMessage: message });
-      return;
-    }
+  if (nonImageAttachments.length > 0) {
+    nonImageAttachments.forEach((mAttachmnt, index) => {
+      console.log(`Attachment ${index + 1}: ${mAttachmnt.name}`); 
+      extAttachments.push(mAttachmnt.name); 
 
-    const recipients = asyncResult.to.value .value;
-    externalRecipients = recipients.filter(recipient => {
-      const email = recipient.emailAddress.toLowerCase();
-      return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
     });
-    if (externalRecipients.length > 0) {
-      externalRecipients.forEach((recipient, index) => {
-        console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`);  
-      });
-      Office.context.mailbox.item.getAttachmentsAsync(
-        { asyncContext: { event, externalRecipients } },
-        getAttachmentsCallback);
 
-    } else {
-      event.completed({ allowEvent: true });
-    }
+    let strRecipients = JSON.stringify(extRecipients);
+    localStorage.setItem("strRecipients", strRecipients);
+    let strAttachments = JSON.stringify(extAttachments);
+    localStorage.setItem("strAttachments", strAttachments);
+
+    event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
+  } else {
+    event.completed({ allowEvent: true });
+  }
+}
+
+function getRecipientsCallback(asyncResult) {
+  const event = asyncResult.asyncContext;
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    const message = "Failed to get recipients";
+    console.error(message);
+    event.completed({ allowEvent: false, errorMessage: message });
+    return;
   }
 
-  function getAttachmentsCallback(asyncResult) {
-    const { event, externalRecipients } = asyncResult.asyncContext;
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      const message = "Failed to retrieve attachments. Please try again or contact support.";
-      console.error(message);
-      event.completed({ allowEvent: false, errorMessage: message });
-      return;
-    }
-
-    const attachments = asyncResult.value;
-
-    if (!attachments || attachments.length === 0) {
-      event.completed({ allowEvent: true });
-      return;
-    }
-
-    const nonImageAttachments = attachments.filter(attachment => {
-      if (!attachment.name) return false; // Skip attachments without a name
-      const extension = attachment.name.split('.').pop().toLowerCase();
-      const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
-      return !imageExtensions.includes(extension);
+  const recipients = asyncResult.to.value .value;
+  externalRecipients = recipients.filter(recipient => {
+    const email = recipient.emailAddress.toLowerCase();
+    return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+  });
+  if (externalRecipients.length > 0) {
+    externalRecipients.forEach((recipient, index) => {
+      console.log(`External recipient ${index + 1}: ${recipient.emailAddress}`);  
     });
+    Office.context.mailbox.item.getAttachmentsAsync(
+      { asyncContext: { event, externalRecipients } },
+      getAttachmentsCallback);
 
-    if (nonImageAttachments.length > 0) {
-      const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
-      const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
-      const message = `## External Recipients
+  } else {
+    event.completed({ allowEvent: true });
+  }
+}
+
+function getAttachmentsCallback(asyncResult) {
+  const { event, externalRecipients } = asyncResult.asyncContext;
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    const message = "Failed to retrieve attachments. Please try again or contact support.";
+    console.error(message);
+    event.completed({ allowEvent: false, errorMessage: message });
+    return;
+  }
+
+  const attachments = asyncResult.value;
+
+  if (!attachments || attachments.length === 0) {
+    event.completed({ allowEvent: true });
+    return;
+  }
+
+  const nonImageAttachments = attachments.filter(attachment => {
+    if (!attachment.name) return false; // Skip attachments without a name
+    const extension = attachment.name.split('.').pop().toLowerCase();
+    const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
+    return !imageExtensions.includes(extension);
+  });
+
+  if (nonImageAttachments.length > 0) {
+    const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
+    const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
+    const message = `## External Recipients
 A list of external email addresses with checkboxes:
 - ${externalEmails}
 
 ## Attachments
 A list of file attachments with checkboxes:
 - ${attachmentNames}
-      `;
-      //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
-      event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
-    } else {
-      event.completed({ allowEvent: true });
-    }
+    `;
+    //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
+    event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
+  } else {
+    event.completed({ allowEvent: true });
   }
+}
 
-  function handleSendFailure(event, errorMessage) {
-    console.error(errorMessage);
-    event.completed({ allowEvent: false, errorMessage: errorMessage });
-  }
+function handleSendFailure(event, errorMessage) {
+  console.error(errorMessage);
+  event.completed({ allowEvent: false, errorMessage: errorMessage });
+}
 
-  // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
-  Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
+// IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
+Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
 

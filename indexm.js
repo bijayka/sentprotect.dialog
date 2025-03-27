@@ -16,8 +16,8 @@ Office.onReady((info) => {
 
   function onMessageSendHandler(event) {
     Office.context.ui.displayDialogAsync(
-      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
-      { height: 30, width: 20 },
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html", // URL of the dialog box
+      { height: 50, width: 50 }, // Adjust dimensions as needed
       (asyncResult) => {
         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
           const dialog = asyncResult.value;
