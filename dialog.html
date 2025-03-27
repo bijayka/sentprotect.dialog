@@ -149,13 +149,15 @@
     });
 
     document.getElementById("cancelButton").addEventListener("click", () => {
-      if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
-        Office.context.ui.messageParent("closeDialog");
-      } else {
-        console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
-        alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
-        window.close(); // Fallback to close the dialog in unsupported environments
-      }
+      alert("Email canceled!");
+      // Add logic to handle canceling the email
+      // if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+      //   Office.context.ui.messageParent("closeDialog");
+      // } else {
+      //   console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
+      //   alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
+      //   window.close(); // Fallback to close the dialog in unsupported environments
+      // }
     });
 
     function CheckboxClick(){
