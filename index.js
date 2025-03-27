@@ -126,12 +126,16 @@ Office.onReady((info) => {
     });
 
     if (nonImageAttachments.length > 0) {
-      myVar=nonImageAttachments;
       nonImageAttachments.forEach((mAttachmnt, index) => {
         console.log(`Attachment ${index + 1}: ${mAttachmnt.name}`); 
         extAttachments.push(mAttachmnt.name); 
 
       });
+
+      let strRecipients = JSON.stringify(extRecipients);
+      localStorage.setItem("strRecipients", strRecipients);
+      let strAttachments = JSON.stringify(extAttachments);
+      localStorage.setItem("strAttachments", strAttachments);
 
 //       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
 //       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");

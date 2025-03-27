@@ -54,7 +54,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="index.js"></script>
+    <!-- <script type="text/javascript" src="index.js"></script> -->
 </head>
 <body>
   <div class="container">
@@ -82,14 +82,16 @@
     </div>
   </div>
   <script>
-    console.log('extRecipients');
-    console.log(extRecipients);
-    console.log('extattachments');
-    console.log(extAttachments);
-    // Example data for testing
-    const externalEmails = ["external1@example.com", "external2@example.com"];
-    const attachments = ["file1.docx", "file2.pdf"];
 
+    // Example data for testing
+    // const externalEmails = ["external1@example.com", "external2@example.com"];
+    // const attachments = ["file1.docx", "file2.pdf"];
+    let retRecipients = localStorage.getItem("strRecipients")
+    let externalEmails = JSON.parse(retRecipients);
+    let retAttachments = localStorage.getItem("strAttachments")
+    let attachments = JSON.parse(retAttachments);
+    console.log(externalEmails);
+    console.log(attachments); 
 
     // Populate the external emails list
     const emailList = document.getElementById("externalEmails");
@@ -114,6 +116,26 @@
       w_indexjs_globa_var = "Hello World Updates"
       alert("Email sent!");
       // Add logic to handle sending the email
+      // Office.context.mailbox.item.notificationMessages.replaceAsync("email-sent", {
+      //   type: "informationalMessage",
+      //   icon: "icon-16",
+      //   message: "Email sent!",
+      //   persistent: false
+      // });
+      // Office.context.mailbox.item.to.getAsync(function(asyncResult) {
+      //   const event = asyncResult.asyncContext;
+      //   if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      //     const message = "Failed to send email: " + JSON.stringify(asyncResult.error);
+      //     console.error(message);
+      //     event.completed({ allowEvent: false, errorMessage: message });
+      //     return;
+      //   }
+      //   else{
+      //     console.log("Email sent");
+      //     event.completed({ allowEvent: true });
+      //   }      
+      // });
+
     });
 
     document.getElementById("cancelButton").addEventListener("click", () => {
