@@ -9,6 +9,21 @@ Office.onReady((info) => {
   console.log("Office.js is ready!");
   console.log('test');
 
+
+  //Modifications
+  console.log("Opening dialog...");
+  Office.context.ui.displayDialogAsync(
+    "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
+    { height: 30, width: 20 },
+    (asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        console.log("Dialog opened successfully.");
+      } else {
+        console.error("Failed to open dialog:", asyncResult.error.message);
+      }
+    }
+  );
+
   function onMessageSendHandler(event) {
     Office.context.ui.displayDialogAsync(
       "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
@@ -110,4 +125,17 @@ A list of file attachments with checkboxes:
 
   // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
   Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
+});
+
+
+//Modifications
+
+document.getElementById("cancelButton").addEventListener("click", () => {
+  if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+    Office.context.ui.messageParent("cancelSend");
+  } else {
+    console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
+    alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
+    window.close(); // Fallback to close the dialog in unsupported environments
+  }
 });

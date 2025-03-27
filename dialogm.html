@@ -130,10 +130,41 @@
           Office.context.ui.messageParent("cancelSend");
         } else {
           console.error("Office.context.ui.messageParent is not available. This may occur if the dialog was not opened using Office.context.ui.displayDialogAsync.");
-          alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
+          console.log("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
           window.close(); // Fallback to close the dialog in unsupported environments
         }
       });
+
+      //Modifications
+
+      // Display dialog
+      Office.context.ui.displayDialogAsync(
+        "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
+        { height: 30, width: 20 },
+        (asyncResult) => {
+          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            const dialog = asyncResult.value;
+
+            // Handle messages from the dialog
+            dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
+              if (message.message === "allowSend") {
+                dialog.close();
+                console.log("User allowed sending the email.");
+              } else if (message.message === "cancelSend") {
+                dialog.close();
+                console.log("User canceled sending the email.");
+              }
+            });
+
+            // Handle dialog closed
+            dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+              console.log("Dialog was closed.");
+            });
+          } else {
+            console.error("Failed to open dialog:", asyncResult.error.message);
+          }
+        }
+      );
     });
   </script>
 </body>
