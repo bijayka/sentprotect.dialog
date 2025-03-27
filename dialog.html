@@ -139,9 +139,14 @@
     });
 
     document.getElementById("cancelButton").addEventListener("click", () => {
-      alert("Email canceled!");
-      // Add logic to handle canceling the email
+      if (Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+        Office.context.ui.messageParent("closeDialog");
+      } else {
+        console.error("Office.context.ui.messageParent is not available.");
+        alert("This action is not supported in the current environment.");
+      }
     });
+
     function CheckboxClick(){
        if (document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length) {
           console.log('All checkboxes are checked');
@@ -151,6 +156,14 @@
           document.getElementById("btnSend").disabled = true;
        }
     }
+
+    // Disable the close button on the top right corner of the task pane
+    Office.onReady(() => {
+      if (Office.context.ui) {
+        Office.context.ui.disableCloseButton();
+      }
+    });
+
   </script>
 </body>
 </html>
