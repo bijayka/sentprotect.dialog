@@ -12,17 +12,7 @@ Office.onReady((info) => {
 
   //Modifications
   console.log("Opening dialog...");
-  Office.context.ui.displayDialogAsync(
-    "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html",
-    { height: 30, width: 20 },
-    (asyncResult) => {
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-        console.log("Dialog opened successfully.");
-      } else {
-        console.error("Failed to open dialog:", asyncResult.error.message);
-      }
-    }
-  );
+ 
 
   function onMessageSendHandler(event) {
     Office.context.ui.displayDialogAsync(
@@ -128,14 +118,4 @@ A list of file attachments with checkboxes:
 });
 
 
-//Modifications
 
-document.getElementById("cancelButton").addEventListener("click", () => {
-  if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
-    Office.context.ui.messageParent("cancelSend");
-  } else {
-    console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
-    alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
-    window.close(); // Fallback to close the dialog in unsupported environments
-  }
-});
