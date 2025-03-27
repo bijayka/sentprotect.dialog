@@ -139,11 +139,12 @@
     });
 
     document.getElementById("cancelButton").addEventListener("click", () => {
-      if (Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
+      if (Office && Office.context && Office.context.ui && typeof Office.context.ui.messageParent === "function") {
         Office.context.ui.messageParent("closeDialog");
       } else {
-        console.error("Office.context.ui.messageParent is not available.");
-        alert("This action is not supported in the current environment.");
+        console.warn("Office.context.ui.messageParent is not available. Ensure the dialog is opened using Office.context.ui.displayDialogAsync.");
+        alert("This action is not supported in the current environment. Please ensure the dialog is opened correctly.");
+        window.close(); // Fallback to close the dialog in unsupported environments
       }
     });
 
