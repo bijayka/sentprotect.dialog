@@ -16,6 +16,7 @@ Office.onReady((info) => {
 });
 
 
+
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
     Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
