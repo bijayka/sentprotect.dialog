@@ -52,9 +52,23 @@
     }
   </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- <script type="text/javascript" src="index.js"></script> -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script>
+    <script type="text/javascript">
+      function sendEmail() {
+        Office.context.mailbox.item.sendAsync((sendResult) => {
+          var t = localStorage.getItem("bijay");
+          console.warn(Office.context.partitionKey);
+          console.warn(t);
+          throw new Error(t);
+          if (sendResult.status === Office.AsyncResultStatus.Failed) {
+              console.log(`Unable to send the message: ${sendResult.error.message}`);
+              return;
+          }
+
+          // Don't run additional operations here. Process them before the sendAsync call instead.
+      });
+      }
+    </script>
 </head>
 <body>
   <div class="container">
