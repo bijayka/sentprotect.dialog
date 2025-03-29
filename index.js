@@ -19,7 +19,7 @@ Office.onReady((info) => {
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
     //Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
-    event.completed({ allowEvent: true, commandId: "msgComposeOpenPaneButton" });
+    event.completed({ allowEvent: false, commandId: "msgComposeOpenPaneButton" });
   }
 
  
@@ -222,3 +222,14 @@ A list of file attachments with checkboxes:
   Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
 
 });
+
+function sendEmail() {
+  Office.context.mailbox.item.sendAsync((sendResult) => {
+    if (sendResult.status === Office.AsyncResultStatus.Failed) {
+        console.log(`Unable to send the message: ${sendResult.error.message}`);
+        return;
+    }
+
+    // Don't run additional operations here. Process them before the sendAsync call instead.
+});
+}
