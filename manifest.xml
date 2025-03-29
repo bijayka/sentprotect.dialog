@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
    <Id>bc1f2d1b-af23-49ac-a6cb-bc04b4cc587a</Id>
-   <Version>1.0.0.21</Version>
+   <Version>1.0.0.23</Version>
    <ProviderName>EY</ProviderName>
    <DefaultLocale>en-US</DefaultLocale>
-   <DisplayName DefaultValue="EY SendProtect Dialog test"/>
+   <DisplayName DefaultValue="EY SendProtect Dialog"/>
    <Description DefaultValue="A template to get started with EY SendProtect."/>
    <IconUrl DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/assets/icon-64.png"/>
    <HighResolutionIconUrl DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/assets/icon-128.png"/>
@@ -44,7 +44,6 @@
     <Hosts>
       <Host xsi:type="MailHost">
         <!-- Event-based activation happens in a lightweight runtime.-->
-        <!-- test -->
         <Runtimes>
           <!-- HTML file including reference to or inline JavaScript event handlers.
                This is used by Outlook on the web and on the new Mac UI, and new Outlook on Windows. -->
@@ -94,12 +93,12 @@
             </OfficeTab>
           </ExtensionPoint>
           <!-- Enable launching the add-in on the included event. -->
-         
           <ExtensionPoint xsi:type="LaunchEvent">
             <LaunchEvents>
               <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" />
             </LaunchEvents>
-            <SourceLocation resid="Taskpane.Url" />
+            <!-- Identify the runtime to be used (also referenced by the Runtime element). -->
+            <SourceLocation resid="WebViewRuntime.Url"/>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
@@ -112,7 +111,7 @@
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.html" />
-        <bt:Url id="Taskpane.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html" />
+        <bt:Url id="Taskpane.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.html" />
         <bt:Url id="WebViewRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.html" />
         <!-- Entry needed for classic Outlook on Windows. -->
         <bt:Url id="JSRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.js" />
