@@ -13,12 +13,13 @@ Office.onReady((info) => {
       item = Office.context.mailbox.item;
       console.log('Office is ready');
   }
-});
+
 
 
   function onMessageSendHandler(event) {
     console.warn(w_indexjs_globa_var);
-    Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
+    //Office.context.mailbox.item.to.getAsync({ asyncContext: event }, getToRecipientsCallback);
+    event.completed({ allowEvent: false, commandId: "msgComposeOpenPaneButton" });
   }
 
  
@@ -136,16 +137,6 @@ Office.onReady((info) => {
       let strAttachments = JSON.stringify(extAttachments);
       localStorage.setItem("strAttachments", strAttachments);
 
-//       const externalEmails = externalRecipients.map(recipient => recipient.emailAddress).join("\n- ");
-//       const attachmentNames = nonImageAttachments.map(attachment => attachment.name).join("\n- ");
-//       const message = `## External Recipients
-// A list of external email addresses with checkboxes:
-// - ${externalEmails}
-
-// ## Attachments
-// A list of file attachments with checkboxes:
-// - ${attachmentNames}
-//       `;
       //event.completed({ allowEvent: false, errorMessage: message, sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser });
       event.completed({ allowEvent: false, errorMessage: "Your email includes external recipients with attachment; please review it before sending.", commandId: "msgComposeOpenPaneButton" });
     } else {
@@ -230,3 +221,4 @@ A list of file attachments with checkboxes:
   // IMPORTANT: To ensure your add-in is supported in Outlook, remember to map the event handler name specified in the manifest to its JavaScript counterpart.
   Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
 
+});
