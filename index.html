@@ -12,7 +12,7 @@
                 const myPartitionKey = Office.context.partitionKey;
                 console.log("myPartitionKey : " + myPartitionKey);
                 const forceSend = getFromLocalStorage('forceSend');
-                const id = document.getElementById("notificationId").value;
+                const id = "eySentProtectMessage";
 
                 const itemId = Office.context.mailbox.item.itemId;
                 const details = {
