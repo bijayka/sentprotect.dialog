@@ -6,23 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EY Sent Protect</title>
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script>
+    <script type="text/javascript" src="index.js">
+        Office.onReady((info) => {
+            function onMessageSendHandler(event) {
+                const myPartitionKey = Office.context.partitionKey;
+                console.log("myPartitionKey : " + myPartitionKey);
+                const forceSend = getFromLocalStorage('forceSend');
+                
+                if (forceSend === 'true') {
+                    event.completed({
+                        allowEvent: true
+                    });
+                } else {
+                    event.completed({
+                        allowEvent: false,
+                        commandId: "msgComposeOpenPaneButton"
+                    });
+                }
+            }
+            Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
 
-    <script type="text/javascript" src="index.js"></script>
-    <style>
-        #alertModal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        } 
-    </style>
+
+            function sendEmail() {
+                setInLocalStorage('forceSend', 'true');
+                Office.context.mailbox.item.sendAsync((sendResult) => {});
+            }
+            function cancelEmail() {
+            
+            }
+            function setInLocalStorage(key, value) {
+                const myPartitionKey = Office.context.partitionKey;
+                if (myPartitionKey) {
+                    localStorage.setItem(myPartitionKey + key, value);
+                } else {
+                    localStorage.setItem(key, value);
+                }
+            }
+
+            function getFromLocalStorage(key) {
+                const myPartitionKey = Office.context.partitionKey;
+
+                if (myPartitionKey) {
+                    return localStorage.getItem(myPartitionKey + key);
+                } else {
+                    return localStorage.getItem(key);
+                }
+            }
+        });
+
+    </script>
 </head>
 
-<button onclick="sendEmail()" class="send">Send</button>
-<button onclick="cancelEmail()" class="cancel">Cancel</button>
 <body>
+    <button onclick="sendEmail()" class="send">Send</button>
+    <button onclick="cancelEmail()" class="cancel">Cancel</button>
 </body>
-
 </html>
