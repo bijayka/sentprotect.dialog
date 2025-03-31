@@ -13,19 +13,34 @@
                 console.log("myPartitionKey : " + myPartitionKey);
                 const forceSend = getFromLocalStorage('forceSend');
                 
-                if (forceSend === 'true') {
-                    event.completed({
-                        allowEvent: true
-                    });
-                } else {
-                    event.completed({
-                        allowEvent: false,
-                        commandId: "msgComposeOpenPaneButton"
-                    });
-                }
+                const itemId = Office.context.mailbox.item.itemId;
+                    const details = {
+                    type: Office.MailboxEnums.ItemNotificationMessageType.InsightMessage,
+                    message: "Your email includes recipients outside of your organization. Please review before sending?",
+                    
+                    actions: [
+                        {
+                        actionText: "Review",
+                        actionType: Office.MailboxEnums.ActionType.ShowTaskPane,
+                        // Identify whether the current mail item is in read or compose mode to set the appropriate commandId value.
+                        commandId: "msgComposeOpenPaneButton",
+                        contextData: { a: "aValue", b: "bValue" }
+                        }
+                    ]
+                    };
+
+                    Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
             }
             Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
         });
+
+        function handleResult(asyncResult) {
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                console.log("Notification message added successfully.");
+            } else {
+                console.log("Error adding notification message: " + asyncResult.error.message);
+            }
+        }
 
         function sendEmail() {
             setInLocalStorage('forceSend', 'true');
