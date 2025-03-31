@@ -29,7 +29,9 @@
 
         function sendEmail() {
             setInLocalStorage('forceSend', 'true');
-            Office.context.mailbox.item.sendAsync((sendResult) => {});
+            Office.context.mailbox.item.sendAsync((sendResult) => {
+                setInLocalStorage('forceSend', 'false');
+            });
         }
         function cancelEmail() {
         
