@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EY Sent Protect</title>
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script>
-    <script type="text/javascript" src="index.js">
+    <script type="text/javascript">
         Office.onReady((info) => {
             function onMessageSendHandler(event) {
                 const myPartitionKey = Office.context.partitionKey;
@@ -25,35 +25,33 @@
                 }
             }
             Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
-
-
-            function sendEmail() {
-                setInLocalStorage('forceSend', 'true');
-                Office.context.mailbox.item.sendAsync((sendResult) => {});
-            }
-            function cancelEmail() {
-            
-            }
-            function setInLocalStorage(key, value) {
-                const myPartitionKey = Office.context.partitionKey;
-                if (myPartitionKey) {
-                    localStorage.setItem(myPartitionKey + key, value);
-                } else {
-                    localStorage.setItem(key, value);
-                }
-            }
-
-            function getFromLocalStorage(key) {
-                const myPartitionKey = Office.context.partitionKey;
-
-                if (myPartitionKey) {
-                    return localStorage.getItem(myPartitionKey + key);
-                } else {
-                    return localStorage.getItem(key);
-                }
-            }
         });
 
+        function sendEmail() {
+            setInLocalStorage('forceSend', 'true');
+            Office.context.mailbox.item.sendAsync((sendResult) => {});
+        }
+        function cancelEmail() {
+        
+        }
+        function setInLocalStorage(key, value) {
+            const myPartitionKey = Office.context.partitionKey;
+            if (myPartitionKey) {
+                localStorage.setItem(myPartitionKey + key, value);
+            } else {
+                localStorage.setItem(key, value);
+            }
+        }
+
+        function getFromLocalStorage(key) {
+            const myPartitionKey = Office.context.partitionKey;
+
+            if (myPartitionKey) {
+                return localStorage.getItem(myPartitionKey + key);
+            } else {
+                return localStorage.getItem(key);
+            }
+        }
     </script>
 </head>
 
