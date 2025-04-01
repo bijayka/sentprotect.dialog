@@ -7,18 +7,18 @@
     <title>EY Sent Protect</title>
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script>
     <script type="text/javascript">
+        //document.getElementById("addInformational").addEventListener("click", addInformational);
         Office.onReady((info) => {
             function onMessageSendHandler(event) {
-                // Adds an informational notification to the mail item.
-                const id = "eySentProtectMessage";
-                const details =
-                {
-                    type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-                    message: "Non-persistent informational notification message with id = " + id,
-                    icon: "PG.Icon.16",
-                    persistent: false
-                };
-                Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
+                const id = document.getElementById("notificationId")?.value || "";
+          const details =
+            {
+              type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
+              message: "Non-persistent informational notification message with id = " + id,
+              icon: "PG.Icon.16",
+              persistent: false
+            };
+          Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
                 // const myPartitionKey = Office.context.partitionKey;
                 // console.log("myPartitionKey : " + myPartitionKey);
                 // const forceSend = getFromLocalStorage('forceSend');
@@ -42,6 +42,19 @@
             }
             Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
         });
+
+        function addInformational() {
+          // Adds an informational notification to the mail item.
+          const id = document.getElementById("notificationId")?.value || "";
+          const details =
+            {
+              type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
+              message: "Non-persistent informational notification message with id = " + id,
+              icon: "PG.Icon.16",
+              persistent: false
+            };
+          Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
+        }
 
         function handleResult(asyncResult) {
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
@@ -84,6 +97,8 @@
 <body>
     <button onclick="sendEmail()" class="send">Send</button>
     <button onclick="cancelEmail()" class="cancel">Cancel</button>
-  
+    <button id="addInformational" class="ms-Button">
+        <div class="ms-Button-label">Add an informational notification</div>
+    </button>
 </body>
 </html>
