@@ -9,26 +9,36 @@
     <script type="text/javascript">
         Office.onReady((info) => {
             function onMessageSendHandler(event) {
-                const myPartitionKey = Office.context.partitionKey;
-                console.log("myPartitionKey : " + myPartitionKey);
-                const forceSend = getFromLocalStorage('forceSend');
+                // Adds an informational notification to the mail item.
                 const id = "eySentProtectMessage";
-
-                const itemId = Office.context.mailbox.item.itemId;
-                const details = {
-                type: Office.MailboxEnums.ItemNotificationMessageType.InsightMessage,
-                message: "Your email includes recipients outside of your organization. Please review before sending?",
-                icon: "Icon.16x16",
-                actions: [
-                    {
-                        actionText: "Review",
-                        actionType: Office.MailboxEnums.ActionType.ShowTaskPane,
-                        commandId: "msgComposeOpenPaneButton"
-                    }
-                    ]
+                const details =
+                {
+                    type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
+                    message: "Non-persistent informational notification message with id = " + id,
+                    icon: "PG.Icon.16",
+                    persistent: false
                 };
-
                 Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
+                // const myPartitionKey = Office.context.partitionKey;
+                // console.log("myPartitionKey : " + myPartitionKey);
+                // const forceSend = getFromLocalStorage('forceSend');
+                // const id = "eySentProtectMessage";
+
+                // const itemId = Office.context.mailbox.item.itemId;
+                // const details = {
+                // type: Office.MailboxEnums.ItemNotificationMessageType.InsightMessage,
+                // message: "Your email includes recipients outside of your organization. Please review before sending?",
+                // icon: "Icon.16x16",
+                // actions: [
+                //     {
+                //         actionText: "Review",
+                //         actionType: Office.MailboxEnums.ActionType.ShowTaskPane,
+                //         commandId: "msgComposeOpenPaneButton"
+                //     }
+                //     ]
+                // };
+
+                // Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
             }
             Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
         });
@@ -74,5 +84,8 @@
 <body>
     <button onclick="sendEmail()" class="send">Send</button>
     <button onclick="cancelEmail()" class="cancel">Cancel</button>
+    <label for="notificationId">Notification ID:</label>
+    <input type="text" id="notificationId" name="notificationId" value="eySentProtectMessage" minlength="4" maxlength="8" size="10" placeholder="Enter Notification ID" />
+    
 </body>
 </html>
