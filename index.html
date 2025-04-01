@@ -52,10 +52,10 @@
         }
 
         function sendEmail() {
-            setInLocalStorage('forceSend', 'true');
-            Office.context.mailbox.item.sendAsync((sendResult) => {
-                setInLocalStorage('forceSend', 'false');
-            });
+            // setInLocalStorage('forceSend', 'true');
+            // Office.context.mailbox.item.sendAsync((sendResult) => {
+            //     setInLocalStorage('forceSend', 'false');
+            // });
         }
         function cancelEmail() {
         
@@ -82,8 +82,8 @@
 </head>
 
 <body>
-    <!-- <button onclick="sendEmail()" class="send">Send</button>
-    <button onclick="cancelEmail()" class="cancel">Cancel</button> -->
+    <button onclick="sendEmail()" class="send">Send</button>
+    <button onclick="cancelEmail()" class="cancel">Cancel</button>
   
 </body>
 </html>
