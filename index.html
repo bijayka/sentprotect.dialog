@@ -18,12 +18,12 @@
                 const details = {
                 type: Office.MailboxEnums.ItemNotificationMessageType.InsightMessage,
                 message: "Your email includes recipients outside of your organization. Please review before sending?",
-                
+                icon: "Icon.16x16",
                 actions: [
                     {
-                        icon: "Icon.16x16",
                         actionText: "Review",
-                        actionType: Office.MailboxEnums.ActionType.ShowTaskPane
+                        actionType: Office.MailboxEnums.ActionType.ShowTaskPane,
+                        commandId: (itemId == undefined ? "PG.HelpCommand.Compose" : "PG.HelpCommand.Read")
                     }
                 ]
                 };
