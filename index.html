@@ -23,9 +23,9 @@
                     {
                         actionText: "Review",
                         actionType: Office.MailboxEnums.ActionType.ShowTaskPane,
-                        commandId: (itemId == undefined ? "PG.HelpCommand.Compose" : "PG.HelpCommand.Read")
+                        commandId: "msgComposeOpenPaneButton"
                     }
-                ]
+                    ]
                 };
 
                 Office.context.mailbox.item.notificationMessages.addAsync(id, details, handleResult);
