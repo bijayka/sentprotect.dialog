@@ -10,15 +10,14 @@ let item;
 // Confirms that the Office.js library is loaded.
 Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
-      item = Office.context.mailbox.item;
-      console.log('Office is ready');
+    console.log("Office.js is ready.");
   }
 });
 
 function onMessageSendHandler(event) {
   Office.context.ui.displayDialogAsync(
-    "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html", // URL of the dialog box
-    { height: 50, width: 50 }, // Adjust dimensions as needed
+    "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
+    { height: 50, width: 50 },
     (asyncResult) => {
       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
         const dialog = asyncResult.value;

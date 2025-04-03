@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
    <Id>bc1f2d1b-af23-49ac-a6cb-bc04b4cc587a</Id>
-   <Version>1.0.0.16</Version>
+   <Version>1.0.0.17</Version>
    <ProviderName>EY</ProviderName>
    <DefaultLocale>en-US</DefaultLocale>
    <DisplayName DefaultValue="EY SendProtect Dialog"/>
@@ -20,14 +20,14 @@
            <Set Name="Mailbox" MinVersion="1.1"/>
        </Sets>
    </Requirements>
-   <FormSettings>
+   <!-- <FormSettings>
        <Form xsi:type="ItemRead">
            <DesktopSettings>
                <SourceLocation DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/"/>
                <RequestedHeight>250</RequestedHeight>
            </DesktopSettings>
        </Form>
-   </FormSettings>
+   </FormSettings> -->
    <Permissions>ReadWriteItem</Permissions>
    <Rule xsi:type="RuleCollection" Mode="Or">
        <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
