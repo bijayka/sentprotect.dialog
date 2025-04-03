@@ -16,7 +16,7 @@ Office.onReady((info) => {
 
   function onMessageSendHandler(event) {
     Office.context.ui.displayTaskPaneAsync(
-      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html", // URL of the task pane
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html", // URL of the task pane
       { title: "Review Email" }, // Task pane title
       (asyncResult) => {
         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
