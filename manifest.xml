@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
    <Id>bc1f2d1b-af23-49ac-a6cb-bc04b4cc587a</Id>
-   <Version>1.0.0.20</Version>
+   <Version>1.0.0.30</Version>
    <ProviderName>EY</ProviderName>
    <DefaultLocale>en-US</DefaultLocale>
    <DisplayName DefaultValue="EY SendProtect Dialog"/>
@@ -44,18 +44,17 @@
     <Hosts>
       <Host xsi:type="MailHost">
         <!-- Event-based activation happens in a lightweight runtime.-->
-        <!-- test -->
         <Runtimes>
           <!-- HTML file including reference to or inline JavaScript event handlers.
                This is used by Outlook on the web and on the new Mac UI, and new Outlook on Windows. -->
-          <Runtime resid="WebViewRuntime.Url">
+          <Runtime resid="JSRuntime.Url">
             <!-- JavaScript file containing event handlers. This is used by classic Outlook on Windows. -->
             <Override type="javascript" resid="JSRuntime.Url"/>
           </Runtime>
         </Runtimes>
         <DesktopFormFactor>
           <!-- Configure other command surface extension points for add-in command support, if needed. -->
-          <FunctionFile resid="Commands.Url" />
+          <FunctionFile resid="JSRuntime.Url" />
           <ExtensionPoint xsi:type="MessageComposeCommandSurface">
             <OfficeTab id="TabDefault">
               <Group id="msgComposeGroup">
@@ -72,7 +71,7 @@
                     <bt:Image size="80" resid="Icon.80x80" />
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
-                    <SourceLocation resid="Taskpane.Url" />
+                    <SourceLocation resid="JSRuntime.Url" />
                   </Action>
                 </Control>
                 <Control xsi:type="Button" id="ActionButton">
@@ -96,17 +95,17 @@
           <!-- Enable launching the add-in on the included event. -->
           <ExtensionPoint xsi:type="LaunchEvent">
             <LaunchEvents>
-              <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser" />
+              <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" />
             </LaunchEvents>
             <!-- Identify the runtime to be used (also referenced by the Runtime element). -->
             <SourceLocation resid="WebViewRuntime.Url"/>
           </ExtensionPoint>
-          <!-- <ExtensionPoint xsi:type="LaunchEvent">
+          <ExtensionPoint xsi:type="LaunchEvent">
             <LaunchEvents>
               <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser" />
             </LaunchEvents>
             <SourceLocation resid="Taskpane.Url" />
-          </ExtensionPoint> -->
+          </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
     </Hosts>
@@ -117,11 +116,7 @@
         <bt:Image id="Icon.80x80" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/indexm.html" />
-        <bt:Url id="Taskpane.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/dialogm.html" />
-        <bt:Url id="WebViewRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/indexm.html" />
-        <!-- Entry needed for classic Outlook on Windows. -->
-        <bt:Url id="JSRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/indexm.js" />
+        <bt:Url id="JSRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.html" />
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Contoso Add-in"/>
