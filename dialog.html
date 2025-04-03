@@ -128,6 +128,11 @@
       document.getElementById("cancelButton").addEventListener("click", () => {
         Office.context.ui.messageParent("cancelSend");
       });
+
+      // Notify parent if dialog takes too long
+      setTimeout(() => {
+        Office.context.ui.messageParent("cancelSend");
+      }, 25000); // 25 seconds timeout
     });
   </script>
 </body>

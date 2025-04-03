@@ -23,8 +23,15 @@ function onMessageSendHandler(event) {
       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
         const dialog = asyncResult.value;
 
+        // Set a timeout to handle long-running dialogs
+        const timeout = setTimeout(() => {
+          dialog.close();
+          event.completed({ allowEvent: false, errorMessage: "Dialog timed out. Please try again." });
+        }, 30000); // 30 seconds timeout
+
         // Handle messages from the dialog
         dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
+          clearTimeout(timeout); // Clear timeout on successful message
           if (message.message === "allowSend") {
             dialog.close();
             event.completed({ allowEvent: true });
@@ -36,6 +43,7 @@ function onMessageSendHandler(event) {
 
         // Handle dialog closed
         dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+          clearTimeout(timeout); // Clear timeout if dialog is closed
           event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
         });
       } else {
