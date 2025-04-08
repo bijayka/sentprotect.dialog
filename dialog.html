@@ -128,18 +128,28 @@
       window.CheckboxClick = function () {
         const allChecked = document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length;
         if (allChecked) {
-          Office.context.ui.messageParent("allowSend");
+          //Office.context.ui.messageParent(JSON.stringify({ action: "allowSend" }));
+          try {
+            Office.context.ui.messageParent(JSON.stringify({ action: "allowSend" }));
+          } catch (error) {
+            console.error("Failed to send message to parent:", error);
+          }
         }
       };
 
       // Cancel button action
       document.getElementById("cancelButton").addEventListener("click", () => {
-        Office.context.ui.messageParent("cancelSend");
+        Office.context.ui.messageParent(JSON.stringify({ action: "cancelSend" }));
       });
 
       // Notify parent if dialog takes too long
       setTimeout(() => {
-        Office.context.ui.messageParent("cancelSend");
+        try {
+        Office.context.ui.messageParent(JSON.stringify({ action: "cancelSend" }));
+        } catch (error) {
+          console.error("Failed to send timeout message:", error);
+          window.close();
+        }
       }, 25000); // 25 seconds timeout
     });
   </script>

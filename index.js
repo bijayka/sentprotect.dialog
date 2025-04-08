@@ -15,9 +15,11 @@ Office.onReady((info) => {
 });
 
 function onMessageSendHandler(event) {
+  // c1
+  event.completed({ allowEvent: false });
   Office.context.ui.displayDialogAsync(
     "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
-    { height: 50, width: 50 },
+    { height: 50, width: 50, displayInIframe: true},
     (asyncResult) => {
       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
         const dialog = asyncResult.value;
@@ -29,21 +31,47 @@ function onMessageSendHandler(event) {
         }, 30000); // 30 seconds timeout
 
         // Handle messages from the dialog
-        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
-          clearTimeout(timeout); // Clear timeout on successful message
-          if (message.message === "allowSend") {
-            dialog.close();
-            event.completed({ allowEvent: true });
-          } else if (message.message === "cancelSend") {
-            dialog.close();
-            event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
-          }
+        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
+          // clearTimeout(timeout); // Clear timeout on successful message
+          // if (message.message === "allowSend") {
+          //   dialog.close();
+          //   event.completed({ allowEvent: true });
+          // } else if (message.message === "cancelSend") {
+          //   dialog.close();
+          //   event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
+          // }
+          let message;
+                try {
+                    message = JSON.parse(arg.message);
+                } catch (e) {
+                    console.error('Error parsing message:', e);
+                    return;
+                }
+
+                if (message.action === "allowSend") {
+                    dialog.close();
+                    // Allow the email to be sent
+                    event.completed({ allowEvent: true });
+                } else if (message.action === "cancelSend") {
+                    dialog.close();
+                    event.completed({ 
+                        allowEvent: false, 
+                        errorMessage: "Send canceled by user" 
+                    });
+                }
         });
 
         // Handle dialog closed
         dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
-          clearTimeout(timeout); // Clear timeout if dialog is closed
-          event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
+          if (arg.error === 12006) {
+            // Dialog was closed
+            event.completed({ 
+              allowEvent: false, 
+              errorMessage: "Dialog was closed" 
+            });
+          }
+          // clearTimeout(timeout); // Clear timeout if dialog is closed
+          // event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
         });
       } else {
         console.error("Failed to open dialog:", asyncResult.error.message);
