@@ -18,7 +18,38 @@ function onMessageSendHandler(event) {
   Office.context.ui.displayDialogAsync(
     "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
     { height: 50, width: 50 },
-    
+    (asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        const dialog = asyncResult.value;
+
+        // Set a timeout to handle long-running dialogs
+        const timeout = setTimeout(() => {
+          dialog.close();
+          event.completed({ allowEvent: false, errorMessage: "Dialog timed out. Please try again." });
+        }, 30000); // 30 seconds timeout
+
+        // Handle messages from the dialog
+        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (message) => {
+          clearTimeout(timeout); // Clear timeout on successful message
+          if (message.message === "allowSend") {
+            dialog.close();
+            event.completed({ allowEvent: true });
+          } else if (message.message === "cancelSend") {
+            dialog.close();
+            event.completed({ allowEvent: false, errorMessage: "Email sending canceled by user." });
+          }
+        });
+
+        // Handle dialog closed
+        dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+          clearTimeout(timeout); // Clear timeout if dialog is closed
+          event.completed({ allowEvent: false, errorMessage: "Dialog was closed before confirmation." });
+        });
+      } else {
+        console.error("Failed to open dialog:", asyncResult.error.message);
+        event.completed({ allowEvent: false, errorMessage: "Failed to open confirmation dialog." });
+      }
+    }
   );
 }
 
