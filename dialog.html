@@ -11,7 +11,7 @@
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     .container {
       max-width: 600px;
       margin: 0 auto;
@@ -72,10 +72,12 @@
         return new Promise((resolve) => {
           Office.context.mailbox.item[field].getAsync((result) => {
             if (result.status === Office.AsyncResultStatus.Succeeded) {
-              resolve(result.value.filter(recipient => {
-                const email = recipient.emailAddress.toLowerCase();
-                return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
-              }));
+             // resolve(result.value.filter(recipient => {
+                const filtered = result.value.filter(recipient => {
+                  const email = recipient.emailAddress.toLowerCase();
+                  return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+                });
+                resolve(filtered);
             } else {
               resolve([]);
             }
@@ -101,10 +103,15 @@
       // Fetch attachments
       Office.context.mailbox.item.getAttachmentsAsync((result) => {
         if (result.status === Office.AsyncResultStatus.Succeeded) {
-          const attachments = result.value.filter(attachment => {
+          // const attachments = result.value.filter(attachment => {
+          //   if (!attachment.name) return false;
+          //   const extension = attachment.name.split('.').pop().toLowerCase();
+          //   const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
+          //   return !imageExtensions.includes(extension);
+            const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
+            const attachments = result.value.filter(attachment => {
             if (!attachment.name) return false;
             const extension = attachment.name.split('.').pop().toLowerCase();
-            const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
             return !imageExtensions.includes(extension);
           });
 
