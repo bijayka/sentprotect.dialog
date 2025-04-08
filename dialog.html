@@ -218,7 +218,7 @@
       <button class="cancel" id="cancelButton">Cancel</button>
     </div>
   </div>
-  <script>
+  <!-- <script>
     Office.onReady(() => {
       const emailList = document.getElementById("externalEmails");
       const attachmentList = document.getElementById("attachments");
@@ -302,6 +302,97 @@
         sendToParent({ action: "timeout" });
       }, 25000); // 25 seconds timeout
     });
-  </script>
+  </script> -->
+  <script>
+    Office.onReady(() => {
+        const emailList = document.getElementById("externalEmails");
+        const attachmentList = document.getElementById("attachments");
+
+        // Function to safely send messages to parent
+        function sendToParent(message) {
+            try {
+                Office.context.ui.messageParent(JSON.stringify(message));
+            } catch (error) {
+                console.error("Failed to send message:", error);
+                // If messageParent fails, try to close the dialog
+                try {
+                    Office.context.ui.closeContainer();
+                } catch (e) {
+                    window.close();
+                }
+            }
+        }
+
+        // Enable sending email when all checkboxes are checked
+        window.CheckboxClick = function () {
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+            
+            if (allChecked) {
+                sendToParent({ action: "allowSend" });
+            }
+        };
+
+        // Cancel button action
+        document.getElementById("cancelButton").addEventListener("click", () => {
+            sendToParent({ action: "cancelSend" });
+        });
+
+        // Notify parent if dialog takes too long
+        setTimeout(() => {
+            sendToParent({ action: "timeout" });
+        }, 25000);
+
+        // Load external recipients
+        Promise.all([
+            Office.context.mailbox.item.to.getAsync(),
+            Office.context.mailbox.item.cc.getAsync(),
+            Office.context.mailbox.item.bcc.getAsync()
+        ]).then(results => {
+            const recipients = results.reduce((acc, result) => {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                    return acc.concat(result.value.filter(recipient => {
+                        const email = recipient.emailAddress.toLowerCase();
+                        return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
+                    }));
+                }
+                return acc;
+            }, []);
+
+            recipients.forEach((recipient, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <input type="checkbox" id="email${index}" value="${recipient.emailAddress}" onclick="CheckboxClick()">
+                    <label for="email${index}">${recipient.emailAddress}</label>
+                `;
+                emailList.appendChild(li);
+            });
+        }).catch(error => {
+            console.error("Error loading recipients:", error);
+            sendToParent({ action: "error", message: "Failed to load recipients" });
+        });
+
+        // Load attachments
+        Office.context.mailbox.item.attachments.getAsync((result) => {
+            if (result.status === Office.AsyncResultStatus.Succeeded) {
+                const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
+                const attachments = result.value.filter(attachment => {
+                    if (!attachment.name) return false;
+                    const extension = attachment.name.split('.').pop().toLowerCase();
+                    return !imageExtensions.includes(extension);
+                });
+
+                attachments.forEach((attachment, index) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <input type="checkbox" id="file${index}" value="${attachment.name}" onclick="CheckboxClick()">
+                        <label for="file${index}">${attachment.name}</label>
+                    `;
+                    attachmentList.appendChild(li);
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

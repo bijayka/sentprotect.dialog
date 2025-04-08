@@ -292,28 +292,97 @@ Office.onReady((info) => {
   }
 });
 
+// function onMessageSendHandler(event) {
+//   // Prevent immediate sending
+//   event.completed({ allowEvent: false });
+
+//   // Check recipients and attachments first
+//   checkEmailContent(event).then(() => {
+//     if (extRecipients.length > 0 && extAttachments.length > 0) {
+//       // Open dialog for review if there are external recipients and attachments
+//       openReviewDialog(event);
+//     } else {
+//       // Allow sending if no external recipients or attachments
+//       event.completed({ allowEvent: true });
+//     }
+//   }).catch(error => {
+//     console.error("Error in onMessageSendHandler:", error);
+//     event.completed({ 
+//       allowEvent: false, 
+//       errorMessage: "An error occurred while checking email content." 
+//     });
+//   });
+// }
 function onMessageSendHandler(event) {
-  // Prevent immediate sending
   event.completed({ allowEvent: false });
 
-  // Check recipients and attachments first
-  checkEmailContent(event).then(() => {
-    if (extRecipients.length > 0 && extAttachments.length > 0) {
-      // Open dialog for review if there are external recipients and attachments
-      openReviewDialog(event);
-    } else {
-      // Allow sending if no external recipients or attachments
-      event.completed({ allowEvent: true });
-    }
-  }).catch(error => {
-    console.error("Error in onMessageSendHandler:", error);
-    event.completed({ 
-      allowEvent: false, 
-      errorMessage: "An error occurred while checking email content." 
-    });
-  });
-}
+  Office.context.ui.displayDialogAsync(
+      "https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html",
+      { height: 50, width: 50, displayInIframe: true },
+      (asyncResult) => {
+          if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+              console.error("Failed to open dialog:", asyncResult.error.message);
+              event.completed({ 
+                  allowEvent: false, 
+                  errorMessage: "Failed to open confirmation dialog" 
+              });
+              return;
+          }
 
+          const dialog = asyncResult.value;
+
+          // Handle messages from dialog
+          dialog.addEventHandler(Office.EventType.DialogMessageReceived, (messageEvent) => {
+              try {
+                  const message = JSON.parse(messageEvent.message);
+                  
+                  switch (message.action) {
+                      case "allowSend":
+                          dialog.close();
+                          event.completed({ allowEvent: true });
+                          break;
+                      case "cancelSend":
+                          dialog.close();
+                          event.completed({ 
+                              allowEvent: false, 
+                              errorMessage: "Send canceled by user" 
+                          });
+                          break;
+                      case "timeout":
+                          dialog.close();
+                          event.completed({ 
+                              allowEvent: false, 
+                              errorMessage: "Review timed out. Please try again." 
+                          });
+                          break;
+                      case "error":
+                          dialog.close();
+                          event.completed({ 
+                              allowEvent: false, 
+                              errorMessage: message.message || "An error occurred" 
+                          });
+                          break;
+                  }
+              } catch (error) {
+                  console.error("Error processing dialog message:", error);
+                  dialog.close();
+                  event.completed({ 
+                      allowEvent: false, 
+                      errorMessage: "Error processing dialog response" 
+                  });
+              }
+          });
+
+          // Handle dialog closed
+          dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+              event.completed({ 
+                  allowEvent: false, 
+                  errorMessage: "Dialog was closed" 
+              });
+          });
+      }
+  );
+}
 async function checkEmailContent(event) {
   try {
     // Get all recipients
