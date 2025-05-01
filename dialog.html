@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
   <title>Review Email</title>
   <style>
     body {
@@ -11,7 +13,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     .container {
       max-width: 600px;
       margin: 0 auto;
@@ -32,374 +33,124 @@
     }
     .buttons {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
     }
-    button.cancel {
+    button {
       padding: 10px 20px;
       font-size: 1em;
       cursor: pointer;
+    }
+    button.send {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+    button.cancel {
       background-color: #f44336;
       color: white;
       border: none;
     }
   </style>
-  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/beta/hosted/office.js"></script>
+    <script type="text/javascript">
+      function sendEmail() {
+        Office.context.mailbox.item.sendAsync((sendResult) => {
+          var t = localStorage.getItem("bijay");
+          console.warn(Office.context.partitionKey);
+          console.warn(t);
+          throw new Error(t);
+          if (sendResult.status === Office.AsyncResultStatus.Failed) {
+              console.log(`Unable to send the message: ${sendResult.error.message}`);
+              return;
+          }
+
+          // Don't run additional operations here. Process them before the sendAsync call instead.
+      });
+      }
+    </script>
 </head>
 <body>
   <div class="container">
-    <h4>Please confirm by ticking each box that you want to send the listed email to external recipients.</h4>
+    <!-- <h1>Review Email</h1> -->
+    <h4>Please confirm by ticking each box that you want to send the listed Attachment to External.</h4>
     <div class="section">
-      <h2>External Recipients</h2>
-      <ul class="checkbox-list" id="externalEmails"></ul>
+      <h2>External Recipientss</h2>
+      <ul class="checkbox-list" id="externalEmails">
+        <!-- Example items -->
+        <!-- <li><input type="checkbox" id="email1" value="email1@example.com"><label for="email1">email1@example.com</label></li> -->
+      </ul>
     </div>
 
     <div class="section">
       <h2>Attachments</h2>
-      <ul class="checkbox-list" id="attachments"></ul>
+      <ul class="checkbox-list" id="attachments">
+        <!-- Example items -->
+        <!-- <li><input type="checkbox" id="file1" value="file1.txt"><label for="file1">file1.txt</label></li> -->
+      </ul>
     </div>
 
     <div class="buttons">
+      <button type="button" id= "btnSend" class="btn btn-success" disabled ="disabled"  >Send</button>
       <button class="cancel" id="cancelButton">Cancel</button>
     </div>
   </div>
   <script>
-    Office.onReady(() => {
-      const emailList = document.getElementById("externalEmails");
-      const attachmentList = document.getElementById("attachments");
 
-      // Fetch recipients from To, Cc, and Bcc fields
-      const fetchRecipients = (field) => {
-        return new Promise((resolve) => {
-          Office.context.mailbox.item[field].getAsync((result) => {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-             // resolve(result.value.filter(recipient => {
-                const filtered = result.value.filter(recipient => {
-                  const email = recipient.emailAddress.toLowerCase();
-                  return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
-                });
-                resolve(filtered);
-            } else {
-              resolve([]);
-            }
-          });
-        });
-      };
+    // Example data for testing
+    // const externalEmails = ["external1@example.com", "external2@example.com"];
+    // const attachments = ["file1.docx", "file2.pdf"];
+    let retRecipients = localStorage.getItem("strRecipients")
+    let externalEmails = JSON.parse(retRecipients);
+    let retAttachments = localStorage.getItem("strAttachments")
+    let attachments = JSON.parse(retAttachments);
+    console.log(externalEmails);
+    console.log(attachments); 
 
-      // Load external recipients
-      Promise.all([
-        fetchRecipients("to"),
-        fetchRecipients("cc"),
-        fetchRecipients("bcc")
-      ]).then(([toRecipients, ccRecipients, bccRecipients]) => {
-        const allRecipients = [...toRecipients, ...ccRecipients, ...bccRecipients];
-        allRecipients.forEach((recipient, index) => {
-          const li = document.createElement("li");
-          li.innerHTML = `<input type="checkbox" id="email${index}" value="${recipient.emailAddress}" onclick="CheckboxClick()">
-                          <label for="email${index}">${recipient.emailAddress}</label>`;
-          emailList.appendChild(li);
-        });
-      });
-
-      // Fetch attachments
-      Office.context.mailbox.item.getAttachmentsAsync((result) => {
-        if (result.status === Office.AsyncResultStatus.Succeeded) {
-          // const attachments = result.value.filter(attachment => {
-          //   if (!attachment.name) return false;
-          //   const extension = attachment.name.split('.').pop().toLowerCase();
-          //   const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
-          //   return !imageExtensions.includes(extension);
-            const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
-            const attachments = result.value.filter(attachment => {
-            if (!attachment.name) return false;
-            const extension = attachment.name.split('.').pop().toLowerCase();
-            return !imageExtensions.includes(extension);
-          });
-
-          attachments.forEach((attachment, index) => {
-            const li = document.createElement("li");
-            li.innerHTML = `<input type="checkbox" id="file${index}" value="${attachment.name}" onclick="CheckboxClick()">
-                            <label for="file${index}">${attachment.name}</label>`;
-            attachmentList.appendChild(li);
-          });
-        }
-      });
-
-      // Enable sending email when all checkboxes are checked
-      window.CheckboxClick = function () {
-        const allChecked = document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length;
-        if (allChecked) {
-          //Office.context.ui.messageParent(JSON.stringify({ action: "allowSend" }));
-          try {
-            Office.context.ui.messageParent(JSON.stringify({ action: "allowSend" }));
-          } catch (error) {
-            console.error("Failed to send message to parent:", error);
-          }
-        }
-      };
-
-      // Cancel button action
-      document.getElementById("cancelButton").addEventListener("click", () => {
-        Office.context.ui.messageParent(JSON.stringify({ action: "cancelSend" }));
-      });
-
-      // Notify parent if dialog takes too long
-      setTimeout(() => {
-        try {
-        Office.context.ui.messageParent(JSON.stringify({ action: "cancelSend" }));
-        } catch (error) {
-          console.error("Failed to send timeout message:", error);
-          window.close();
-        }
-      }, 25000); // 25 seconds timeout
+    // Populate the external emails list
+    const emailList = document.getElementById("externalEmails");
+    externalEmails.forEach((email, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<input type="checkbox" id="email${index}" value="${email}" onclick="CheckboxClick()">
+                      <label for="email${index}">${email}</label>`;
+      emailList.appendChild(li);
     });
+
+    // Populate the attachments list
+    const attachmentList = document.getElementById("attachments");
+    attachments.forEach((file, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<input type="checkbox" id="file${index}" value="${file}" onclick="CheckboxClick()">
+                      <label for="file${index}">${file}</label>`;
+      attachmentList.appendChild(li);
+    });
+
+    // Button actions
+    document.getElementById("btnSend").addEventListener("click", () => {
+      w_indexjs_globa_var = "Hello World Updates"
+      alert("Email sent!");
+      // Add logic to handle sending the email
+      // Office.context.mailbox.item.notificationMessages.replaceAsync("email-sent", {
+      //   type: "informationalMessage",
+      //   icon: "icon-16",
+      //   message: "Email sent!",
+      //   persistent: false
+      // });
+    });
+
+    document.getElementById("cancelButton").addEventListener("click", () => {
+      alert("Email canceled!");
+      // Add logic to handle canceling the email
+    });
+    function CheckboxClick(){
+       if (document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length) {
+          console.log('All checkboxes are checked');
+          document.getElementById("btnSend").disabled = false;
+       } else {
+          console.log('Some checkboxes are not checked');
+          document.getElementById("btnSend").disabled = true;
+       }
+    }
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Review Email</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    h2 {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-    .section {
-      margin-bottom: 20px;
-    }
-    .checkbox-list {
-      list-style: none;
-      padding: 0;
-    }
-    .checkbox-list li {
-      margin-bottom: 5px;
-    }
-    .buttons {
-      display: flex;
-      justify-content: flex-end;
-    }
-    button.cancel {
-      padding: 10px 20px;
-      font-size: 1em;
-      cursor: pointer;
-      background-color: #f44336;
-      color: white;
-      border: none;
-    }
-  </style>
-  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-</head>
-<body>
-  <div class="container">
-    <h4>Please confirm by ticking each box that you want to send the listed email to external recipients.</h4>
-    <div class="section">
-      <h2>External Recipients</h2>
-      <ul class="checkbox-list" id="externalEmails"></ul>
-    </div>
-
-    <div class="section">
-      <h2>Attachments</h2>
-      <ul class="checkbox-list" id="attachments"></ul>
-    </div>
-
-    <div class="buttons">
-      <button class="cancel" id="cancelButton">Cancel</button>
-    </div>
-  </div>
-  <! <script>
-    Office.onReady(() => {
-      const emailList = document.getElementById("externalEmails");
-      const attachmentList = document.getElementById("attachments");
-
-      // Function to safely send messages to parent
-      function sendToParent(message) {
-        if (window.opener) {
-          window.opener.postMessage(message, "*");
-        } else {
-          console.error("No parent window found");
-          window.close();
-        }
-      }
-
-      // Fetch recipients from To, Cc, and Bcc fields
-      const fetchRecipients = (field) => {
-        return new Promise((resolve) => {
-          Office.context.mailbox.item[field].getAsync((result) => {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-              const filtered = result.value.filter(recipient => {
-                const email = recipient.emailAddress.toLowerCase();
-                return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
-              });
-              resolve(filtered);
-            } else {
-              resolve([]);
-            }
-          });
-        });
-      };
-
-      // Load external recipients
-      Promise.all([
-        fetchRecipients("to"),
-        fetchRecipients("cc"),
-        fetchRecipients("bcc")
-      ]).then(([toRecipients, ccRecipients, bccRecipients]) => {
-        const allRecipients = [...toRecipients, ...ccRecipients, ...bccRecipients];
-        allRecipients.forEach((recipient, index) => {
-          const li = document.createElement("li");
-          li.innerHTML = `<input type="checkbox" id="email${index}" value="${recipient.emailAddress}" onclick="CheckboxClick()">
-                         <label for="email${index}">${recipient.emailAddress}</label>`;
-          emailList.appendChild(li);
-        });
-      });
-
-      // Fetch attachments
-      Office.context.mailbox.item.getAttachmentsAsync((result) => {
-        if (result.status === Office.AsyncResultStatus.Succeeded) {
-          const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
-          const attachments = result.value.filter(attachment => {
-            if (!attachment.name) return false;
-            const extension = attachment.name.split('.').pop().toLowerCase();
-            return !imageExtensions.includes(extension);
-          });
-
-          attachments.forEach((attachment, index) => {
-            const li = document.createElement("li");
-            li.innerHTML = `<input type="checkbox" id="file${index}" value="${attachment.name}" onclick="CheckboxClick()">
-                           <label for="file${index}">${attachment.name}</label>`;
-            attachmentList.appendChild(li);
-          });
-        }
-      });
-
-      // Enable sending email when all checkboxes are checked
-      window.CheckboxClick = function () {
-        const allChecked = document.querySelectorAll('input[type="checkbox"]:checked').length === document.querySelectorAll('input[type="checkbox"]').length;
-        if (allChecked) {
-          sendToParent({ action: "allowSend" });
-        }
-      };
-
-      // Cancel button action
-      document.getElementById("cancelButton").addEventListener("click", () => {
-        sendToParent({ action: "cancelSend" });
-      });
-
-      // Notify parent if dialog takes too long
-      setTimeout(() => {
-        sendToParent({ action: "timeout" });
-      }, 25000); // 25 seconds timeout
-    });
-  </script> -->
-  <!-- <script>
-    Office.onReady(() => {
-        const emailList = document.getElementById("externalEmails");
-        const attachmentList = document.getElementById("attachments");
-
-        // Function to safely send messages to parent
-        function sendToParent(message) {
-            try {
-                Office.context.ui.messageParent(JSON.stringify(message));
-            } catch (error) {
-                console.error("Failed to send message:", error);
-                // If messageParent fails, try to close the dialog
-                try {
-                    Office.context.ui.closeContainer();
-                } catch (e) {
-                    window.close();
-                }
-            }
-        }
-
-        // Enable sending email when all checkboxes are checked
-        window.CheckboxClick = function () {
-            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-            const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
-            
-            if (allChecked) {
-                sendToParent({ action: "allowSend" });
-            }
-        };
-
-        // Cancel button action
-        document.getElementById("cancelButton").addEventListener("click", () => {
-            sendToParent({ action: "cancelSend" });
-        });
-
-        // Notify parent if dialog takes too long
-        setTimeout(() => {
-            sendToParent({ action: "timeout" });
-        }, 25000);
-
-        // Load external recipients
-        Promise.all([
-            Office.context.mailbox.item.to.getAsync(),
-            Office.context.mailbox.item.cc.getAsync(),
-            Office.context.mailbox.item.bcc.getAsync()
-        ]).then(results => {
-            const recipients = results.reduce((acc, result) => {
-                if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    return acc.concat(result.value.filter(recipient => {
-                        const email = recipient.emailAddress.toLowerCase();
-                        return !email.endsWith("@ey.com") && !email.endsWith("@ey.net");
-                    }));
-                }
-                return acc;
-            }, []);
-
-            recipients.forEach((recipient, index) => {
-                const li = document.createElement("li");
-                li.innerHTML = `
-                    <input type="checkbox" id="email${index}" value="${recipient.emailAddress}" onclick="CheckboxClick()">
-                    <label for="email${index}">${recipient.emailAddress}</label>
-                `;
-                emailList.appendChild(li);
-            });
-        }).catch(error => {
-            console.error("Error loading recipients:", error);
-            sendToParent({ action: "error", message: "Failed to load recipients" });
-        });
-
-        // Load attachments
-        Office.context.mailbox.item.attachments.getAsync((result) => {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-                const imageExtensions = ["gif", "jpg", "png", "webp", "tif", "tiff", "jpeg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c"];
-                const attachments = result.value.filter(attachment => {
-                    if (!attachment.name) return false;
-                    const extension = attachment.name.split('.').pop().toLowerCase();
-                    return !imageExtensions.includes(extension);
-                });
-
-                attachments.forEach((attachment, index) => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        <input type="checkbox" id="file${index}" value="${attachment.name}" onclick="CheckboxClick()">
-                        <label for="file${index}">${attachment.name}</label>
-                    `;
-                    attachmentList.appendChild(li);
-                });
-            }
-        });
-    });
-</script>
-</body>
-</html> --> -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
    <Id>bc1f2d1b-af23-49ac-a6cb-bc04b4cc587a</Id>
-   <Version>1.0.0.17</Version>
+   <Version>1.0.0.24</Version>
    <ProviderName>EY</ProviderName>
    <DefaultLocale>en-US</DefaultLocale>
    <DisplayName DefaultValue="EY SendProtect Dialog"/>
@@ -95,7 +95,7 @@
           <!-- Enable launching the add-in on the included event. -->
           <ExtensionPoint xsi:type="LaunchEvent">
             <LaunchEvents>
-              <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser" />
+              <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" />
             </LaunchEvents>
             <!-- Identify the runtime to be used (also referenced by the Runtime element). -->
             <SourceLocation resid="WebViewRuntime.Url"/>
@@ -109,21 +109,21 @@
         <bt:Image id="Icon.32x32" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/assets/icon-32.png"/>
         <bt:Image id="Icon.80x80" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/assets/icon-80.png"/>
       </bt:Images>
-      <!-- This section defines the URLs used by the add-in -->
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.html" />
         <bt:Url id="Taskpane.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/dialog.html" />
         <bt:Url id="WebViewRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.html" />
+        <!-- Entry needed for classic Outlook on Windows. -->
         <bt:Url id="JSRuntime.Url" DefaultValue="https://gray-moss-0578a810f.6.azurestaticapps.net/index.js" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GroupLabel" DefaultValue="EY SendProtect"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Open SendProtect Dialog"/>
-        <bt:String id="ActionButton.Label" DefaultValue="Review and Send"/>
+        <bt:String id="GroupLabel" DefaultValue="Contoso Add-in"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Taskpane"/>
+        <bt:String id="ActionButton.Label" DefaultValue="Perform an action"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Open the SendProtect dialog to review recipients and attachments."/>
-        <bt:String id="ActionButton.Tooltip" DefaultValue="Review external recipients and attachments before sending the email."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane to provide additional functionality or information."/>
+        <bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
